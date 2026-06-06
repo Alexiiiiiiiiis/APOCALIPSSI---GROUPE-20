@@ -148,12 +148,24 @@ SPECTACULAR_SETTINGS = {
 }
 
 # ----------------------------------------------------------------------------
-# CORS (autorise le frontend Vite sur :3000 en dev)
+# CORS (autorise le frontend Vite)
 # ----------------------------------------------------------------------------
-CORS_ALLOWED_ORIGINS = [
+# Le port hôte du frontend est configurable via FRONTEND_HOST_PORT (.env) en
+# cas de conflit sur le port 3000. On autorise dynamiquement ce port (en plus
+# du 3000 par défaut) pour éviter tout blocage CORS. Surcharge totale possible
+# en définissant CORS_ALLOWED_ORIGINS dans le .env (liste séparée par virgules).
+_frontend_port = config("FRONTEND_HOST_PORT", default="3000")
+_default_cors = {
+    f"http://localhost:{_frontend_port}",
+    f"http://127.0.0.1:{_frontend_port}",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-]
+}
+CORS_ALLOWED_ORIGINS = config(
+    "CORS_ALLOWED_ORIGINS",
+    default=",".join(sorted(_default_cors)),
+    cast=Csv(),
+)
 CORS_ALLOW_CREDENTIALS = True
 
 # ----------------------------------------------------------------------------
