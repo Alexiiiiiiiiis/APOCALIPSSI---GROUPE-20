@@ -92,3 +92,38 @@ export async function confirmPasswordReset(
   });
   return data.detail;
 }
+
+// ---------------------------------------------------------------------------
+// Profil (Lot 4) : modifier ses infos, son mot de passe, supprimer son compte
+// ---------------------------------------------------------------------------
+
+/** Modifie le profil (prénom / nom / email). Renvoie l'utilisateur à jour. */
+export async function updateProfile(input: {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+}): Promise<User> {
+  const { data } = await api.patch<User>('/accounts/profile/', input);
+  return data;
+}
+
+/** Change le mot de passe (ancien requis). Le backend renvoie un nouveau token. */
+export async function changePassword(
+  old_password: string,
+  new_password: string,
+): Promise<string> {
+  const { data } = await api.post<{ detail: string; token: string }>(
+    '/accounts/change-password/',
+    { old_password, new_password },
+  );
+  // Le mot de passe a changé -> on remplace le token stocké par le nouveau.
+  setToken(data.token);
+  return data.detail;
+}
+
+/** Supprime définitivement le compte (confirmé par le mot de passe). */
+export async function deleteAccount(password: string): Promise<void> {
+  // axios : le corps d'une requête DELETE se passe via la clé `data`.
+  await api.delete('/accounts/profile/', { data: { password } });
+  clearToken();
+}

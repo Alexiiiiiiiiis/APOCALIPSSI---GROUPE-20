@@ -35,7 +35,13 @@ export default function Layout() {
                   Historique
                 </Link>
                 <span className="text-slate-500">|</span>
-                <span className="text-slate-600 hidden sm:inline">{user.username}</span>
+                <Link
+                  to="/profile"
+                  className="text-slate-600 hover:text-indigo-600 hidden sm:inline"
+                  title="Mon profil"
+                >
+                  {user.first_name || user.email}
+                </Link>
                 <button onClick={handleLogout} className="btn-secondary">
                   Déconnexion
                 </button>

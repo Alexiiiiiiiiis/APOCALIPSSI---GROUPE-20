@@ -11,6 +11,7 @@ import VerifyEmailPage from '@/pages/VerifyEmailPage';
 import UploadPage from '@/pages/UploadPage';
 import QuizPage from '@/pages/QuizPage';
 import HistoryPage from '@/pages/HistoryPage';
+import ProfilePage from '@/pages/ProfilePage';
 
 export default function App() {
   return (
@@ -47,6 +48,14 @@ export default function App() {
               element={
                 <RequireAuth>
                   <HistoryPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="profile"
+              element={
+                <RequireAuth>
+                  <ProfilePage />
                 </RequireAuth>
               }
             />

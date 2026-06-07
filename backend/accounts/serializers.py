@@ -125,3 +125,96 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 class EmailVerifySerializer(serializers.Serializer):
     """Validation d'email : le token reçu par email."""
     token = serializers.CharField()
+
+
+# ---------------------------------------------------------------------------
+# Gestion du profil (Lot 4) : modifier ses infos, son mot de passe, supprimer
+# ---------------------------------------------------------------------------
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    """Modification du profil : prénom, nom et email.
+
+    [Note pédagogique] L'email est l'identifiant (username = email en interne).
+    Si l'utilisateur change d'email, on doit donc mettre à jour le username ET
+    re-demander une validation (email_verified repasse à False). On gère aussi
+    le cas du doublon (email déjà pris par quelqu'un d'autre).
+    """
+
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email"]
+        extra_kwargs = {
+            "email":      {"required": False},
+            "first_name": {"required": False},
+            "last_name":  {"required": False},
+        }
+
+    def validate_email(self, value: str) -> str:
+        value = value.strip().lower()
+        # L'email doit rester unique, SAUF s'il s'agit déjà du mien (pas un doublon).
+        clash = (
+            User.objects.filter(email__iexact=value)
+            .exclude(pk=self.instance.pk)
+            .exists()
+            or User.objects.filter(username__iexact=value)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        )
+        if clash:
+            raise serializers.ValidationError(
+                "Cet email est déjà utilisé par un autre compte."
+            )
+        return value
+
+    def update(self, instance: User, validated_data: dict) -> User:
+        new_email = validated_data.get("email")
+        email_changed = new_email is not None and new_email != instance.email
+
+        instance.first_name = validated_data.get("first_name", instance.first_name)
+        instance.last_name = validated_data.get("last_name", instance.last_name)
+        if new_email is not None:
+            instance.email = new_email
+            instance.username = new_email  # username = email (identifiant)
+        instance.save()
+
+        # Changement d'email -> il faut le re-valider.
+        if email_changed:
+            profile = get_or_create_profile(instance)
+            profile.email_verified = False
+            profile.save(update_fields=["email_verified"])
+            instance._email_changed = True  # drapeau lu par la vue pour renvoyer un email
+        return instance
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """Changement de mot de passe : il faut connaître l'ancien (sécurité)."""
+
+    old_password = serializers.CharField(write_only=True, style={"input_type": "password"})
+    new_password = serializers.CharField(
+        write_only=True, min_length=8, style={"input_type": "password"}
+    )
+
+    def validate_old_password(self, value: str) -> str:
+        user = self.context["request"].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("Mot de passe actuel incorrect.")
+        return value
+
+    def validate_new_password(self, value: str) -> str:
+        try:
+            django_validate_password(value, user=self.context["request"].user)
+        except DjangoValidationError as exc:
+            raise serializers.ValidationError(list(exc.messages))
+        return value
+
+
+class DeleteAccountSerializer(serializers.Serializer):
+    """Suppression de compte : on confirme par le mot de passe (action destructive)."""
+
+    password = serializers.CharField(write_only=True, style={"input_type": "password"})
+
+    def validate_password(self, value: str) -> str:
+        user = self.context["request"].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("Mot de passe incorrect.")
+        return value

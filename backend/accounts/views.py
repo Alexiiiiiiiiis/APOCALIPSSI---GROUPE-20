@@ -25,9 +25,11 @@ from rest_framework.views import APIView
 from .emails import (EmailError, send_password_reset_email,
                      send_verification_email)
 from .models import get_or_create_profile
-from .serializers import (EmailVerifySerializer, LoginSerializer,
+from .serializers import (ChangePasswordSerializer, DeleteAccountSerializer,
+                          EmailVerifySerializer, LoginSerializer,
                           PasswordResetConfirmSerializer,
-                          PasswordResetRequestSerializer, SignupSerializer,
+                          PasswordResetRequestSerializer,
+                          ProfileUpdateSerializer, SignupSerializer,
                           UserSerializer)
 from .tokens import read_email_verify_token, read_password_reset_tokens
 
@@ -183,3 +185,78 @@ class PasswordResetConfirmView(APIView):
         user.set_password(serializer.validated_data["new_password"])
         user.save(update_fields=["password"])
         return Response({"detail": "Mot de passe réinitialisé. Vous pouvez vous connecter."})
+
+
+# ---------------------------------------------------------------------------
+# Gestion du profil (Lot 4)
+# ---------------------------------------------------------------------------
+
+class ProfileView(APIView):
+    """Profil de l'utilisateur connecté : consulter, modifier, supprimer.
+
+        GET    /api/accounts/profile/  — lire son profil
+        PATCH  /api/accounts/profile/  — modifier prénom / nom / email
+        DELETE /api/accounts/profile/  — supprimer définitivement son compte
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(responses={200: UserSerializer})
+    def get(self, request):
+        return Response(UserSerializer(request.user).data)
+
+    @extend_schema(request=ProfileUpdateSerializer, responses={200: UserSerializer})
+    def patch(self, request):
+        serializer = ProfileUpdateSerializer(
+            instance=request.user, data=request.data, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        # Si l'email a changé, on (re)envoie un email de validation (best-effort,
+        # validation SOFT : on ne bloque pas si l'envoi échoue).
+        if getattr(user, "_email_changed", False):
+            try:
+                send_verification_email(user)
+            except EmailError as exc:
+                logger.warning("Email de validation non renvoyé pour %s : %s", user.email, exc)
+
+        return Response(UserSerializer(user).data)
+
+    @extend_schema(request=DeleteAccountSerializer,
+                   responses={204: OpenApiResponse(description="Compte supprimé")})
+    def delete(self, request):
+        # Suppression DURE (hard delete) : confirmée par le mot de passe.
+        # [TODO J3-bis RGPD] Avant de supprimer, proposer un export des données
+        #   personnelles (droit à la portabilité). Voir Lot futur "export RGPD".
+        serializer = DeleteAccountSerializer(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+
+        user = request.user
+        Token.objects.filter(user=user).delete()  # invalide le token courant
+        django_logout(request)
+        user.delete()  # supprime aussi le Profile (on_delete=CASCADE)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ChangePasswordView(APIView):
+    """Changement de mot de passe (en étant connecté, avec l'ancien mot de passe)."""
+
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(request=ChangePasswordSerializer,
+                   responses={200: OpenApiResponse(description="Mot de passe modifié")})
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+
+        user = request.user
+        user.set_password(serializer.validated_data["new_password"])
+        user.save(update_fields=["password"])
+
+        # Changer le mot de passe invalide les tokens DRF existants : on en
+        # régénère un pour que l'utilisateur reste connecté sans avoir à se
+        # reconnecter manuellement.
+        Token.objects.filter(user=user).delete()
+        token = Token.objects.create(user=user)
+        return Response({"detail": "Mot de passe modifié.", "token": token.key})

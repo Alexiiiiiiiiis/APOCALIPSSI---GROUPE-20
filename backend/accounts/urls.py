@@ -1,8 +1,9 @@
 from django.urls import path
 
-from .views import (LoginView, LogoutView, MeView, PasswordResetConfirmView,
-                    PasswordResetRequestView, ResendVerificationView,
-                    SignupView, VerifyEmailView)
+from .views import (ChangePasswordView, LoginView, LogoutView, MeView,
+                    PasswordResetConfirmView, PasswordResetRequestView,
+                    ProfileView, ResendVerificationView, SignupView,
+                    VerifyEmailView)
 
 urlpatterns = [
     # Authentification de base
@@ -18,4 +19,8 @@ urlpatterns = [
     # Réinitialisation de mot de passe (mot de passe oublié)
     path("password-reset/",         PasswordResetRequestView.as_view(), name="password-reset"),
     path("password-reset/confirm/", PasswordResetConfirmView.as_view(), name="password-reset-confirm"),
+
+    # Profil (modifier / changer mot de passe / supprimer le compte)
+    path("profile/",         ProfileView.as_view(),        name="profile"),
+    path("change-password/", ChangePasswordView.as_view(), name="change-password"),
 ]
