@@ -7,6 +7,54 @@ Versioning : [SemVer](https://semver.org/lang/fr/).
 
 ---
 
+## [1.1.0] — 2026-06-07
+
+🚀 **Enrichissement du kit avant la semaine : comptes complets, multi-LLM,
+emails, MVP2.**
+
+### Ajouté
+
+#### Multi-fournisseurs LLM
+- 9 fournisseurs au choix via `LLM_BACKEND` : `ollama` (défaut local), `gemini`,
+  `groq`, `cerebras`, `mistral`, `openrouter`, `openai`, `anthropic`, `mock`
+- Base `OpenAICompatibleClient` (DRY) + prompt partagé `quiz_prompt.py`
+- Avertissement pédagogique pour les fournisseurs cloud/payants
+- Timeout LLM configurable (`OLLAMA_TIMEOUT`, `LLM_API_TIMEOUT`)
+
+#### Comptes (app `accounts`)
+- **Identifiant = email** (inscription/connexion par email, `username = email`)
+- **Validation d'email « soft »** (modèle `Profile.email_verified` + bandeau)
+- **Mot de passe oublié** : demande (anti-énumération) + confirmation par lien
+- **Page profil** : modifier prénom/nom/email, changer le mot de passe,
+  **supprimer son compte**
+- Tokens sans stockage en base (`django.core.signing` + `default_token_generator`)
+
+#### Emails
+- Bascule automatique console (dev) / **Brevo** SMTP (réel)
+- Helpers `accounts/emails.py` avec messages d'erreur explicites (clé expirée…)
+- Commande `send_test_email`
+
+#### MVP2 (fonctionnalités démo)
+- **Tableau de bord de progression** (`/dashboard`) : KPIs + graphique
+- **Révision des erreurs** (`/review`) : champ `Question.selected_index` + vues
+- **Mode sombre** : `ThemeContext` + `darkMode: 'class'`
+
+#### Pages légales
+- 4 pages vierges à compléter (mentions, confidentialité, CGU, cookies) + footer
+
+#### Documentation & outillage
+- `GUIDE-ETUDIANT.md` (prise en main pas à pas)
+- `docs/08-mvp2-idees.md` (catalogue d'idées MVP2)
+- Mise à jour README + `docs/03-auth.md`
+- Scripts `redeploy.sh` / `redeploy.ps1`
+- Conteneurs renommés `apocalipssi-2026-*`
+
+### Corrigé
+- CORS dynamique (port du frontend pris en compte) — déblocage de l'inscription
+- Timeout de génération de quiz (502) sur CPU lent
+
+---
+
 ## [1.0.0] — 2026-05-26
 
 🎉 **Première release stable du kit de démarrage APOCAL'IPSSI 2026.**

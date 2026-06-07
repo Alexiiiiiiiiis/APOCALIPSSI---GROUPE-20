@@ -1,7 +1,7 @@
 # IPSSI_APOCAL_KIT 🚀
 
 [![CI](https://github.com/melafrit/IPSSI_APOCAL_KIT/actions/workflows/ci.yml/badge.svg)](https://github.com/melafrit/IPSSI_APOCAL_KIT/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.0.0-indigo)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-indigo)](./CHANGELOG.md)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-amber.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
 [![React](https://img.shields.io/badge/react-18-cyan.svg)](https://react.dev/)
@@ -12,6 +12,18 @@ de LLM open source.
 
 > ⚡ **30 % du MVP déjà câblé.** Concentrez-vous sur la logique produit et
 > votre réactivité agile, pas sur la plomberie.
+
+> 🎓 **Nouveau sur le projet ? Commencez par le [Guide étudiant](./GUIDE-ETUDIANT.md)** —
+> de l'installation à votre première fonctionnalité, pas à pas.
+
+### ✨ Déjà inclus
+
+- **Comptes** : inscription / connexion **par email**, validation d'email, mot de
+  passe oublié, **page profil** (modifier / supprimer son compte)
+- **Quiz** : upload PDF/texte → génération LLM de 10 QCM → correction + score → historique
+- **MVP2 (démos)** : tableau de bord de progression, révision des erreurs, **mode sombre**
+- **LLM** : 9 fournisseurs au choix · **Emails** : console (dev) / Brevo (réel)
+- **Légal** : 4 pages légales vierges à compléter
 
 ---
 
@@ -56,18 +68,21 @@ open http://localhost:8000/api/docs  # Swagger UI
 
 ## 📚 Documentation détaillée
 
-Le dossier [`docs/`](./docs) contient 8 fiches thématiques :
+👉 **Démarrage guidé pour les étudiants : [GUIDE-ETUDIANT.md](./GUIDE-ETUDIANT.md)**
+
+Le dossier [`docs/`](./docs) contient 9 fiches thématiques :
 
 | Fichier | Sujet |
 |---|---|
 | [00-getting-started.md](./docs/00-getting-started.md) | Setup détaillé + screenshots + troubleshooting 1ʳᵉ démarrage |
 | [01-architecture.md](./docs/01-architecture.md) | Diagramme Django ↔ React ↔ Postgres ↔ Ollama + flux d'auth |
 | [02-llm-integration.md](./docs/02-llm-integration.md) | Câblage Ollama, changement de modèle, structure du prompt |
-| [03-auth.md](./docs/03-auth.md) | Auth Django REST, sessions vs JWT, où ajouter votre logique |
+| [03-auth.md](./docs/03-auth.md) | Auth par email, validation, reset, profil, où étendre |
 | [04-testing.md](./docs/04-testing.md) | pytest, vitest + tutorial test adversarial (préparation J3) |
 | [05-ci-cd.md](./docs/05-ci-cd.md) | GitHub Actions, Conventional Commits, hooks pre-commit |
 | [06-troubleshooting.md](./docs/06-troubleshooting.md) | Docker, ports en conflit, Ollama, CORS |
 | [07-bonnes-pratiques.md](./docs/07-bonnes-pratiques.md) | ADR, post-mortem, INVEST, MoSCoW + lien cours Agile |
+| [08-mvp2-idees.md](./docs/08-mvp2-idees.md) | Catalogue d'idées MVP2 + méthode de priorisation |
 
 ---
 
@@ -120,8 +135,8 @@ Option **rapide** (`--fast` / `-Fast`) — recrée sans reconstruire les images 
 
 ## 📧 Email (Brevo)
 
-L'application envoie des emails (à venir : validation de compte, réinitialisation
-de mot de passe). Le backend bascule **automatiquement** :
+L'application envoie des emails (**validation de compte** à l'inscription,
+**réinitialisation de mot de passe**). Le backend bascule **automatiquement** :
 
 - **Sans clé Brevo (défaut dev)** → backend « console » : les emails s'affichent
   dans les **logs du backend**. Idéal pour tester sans compte Brevo ni adresse réelle.
@@ -156,7 +171,7 @@ En mode console, l'email s'affiche dans la sortie ; avec Brevo, il part réellem
 
 | # | Feature |
 |---|---|
-| F1 | Inscription / connexion (Django Auth) |
+| F1 | Inscription / connexion **par email** (Django Auth) |
 | F2 | Saisie cours (PDF ≤ 5 Mo OU texte ≥ 200 caractères) |
 | F3 | Génération auto de 10 QCM via Llama 3.1 8B |
 | F4 | Soumission + correction auto |
@@ -165,8 +180,10 @@ En mode console, l'email s'affiche dans la sortie ; avec Brevo, il part réellem
 
 ### Release 2 — Catalogue de pistes (jeudi soir)
 
-Aucune obligatoire — votre Product Owner et votre Story Map décident :
-P1 questions ouvertes LLM · P2 dashboard progression · P3 identification lacunes · P4 plan de révision personnalisé · P5 multi-cours · P6 difficulté ajustable · P7 flashcards · P8 export PDF · P9 mode focus lacunes · P10 markdown
+Aucune obligatoire — votre Product Owner et votre Story Map décident.
+**Catalogue complet d'idées (valeur / complexité / pistes techniques) :
+[docs/08-mvp2-idees.md](./docs/08-mvp2-idees.md).** Trois sont déjà codées comme
+exemples : tableau de bord, révision des erreurs, mode sombre.
 
 ---
 
