@@ -1,5 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  // Mode sombre piloté par une classe `dark` sur <html> (MVP2 — Lot 6).
+  // Le ThemeContext ajoute/retire cette classe ; voir src/contexts/ThemeContext.tsx
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {

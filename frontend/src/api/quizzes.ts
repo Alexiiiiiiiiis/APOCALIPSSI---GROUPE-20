@@ -61,3 +61,48 @@ export async function submitAnswers(
   const { data } = await api.post<AnswerResult>(`/quizzes/${quizId}/answer/`, { answers });
   return data;
 }
+
+// ---------------------------------------------------------------------------
+// MVP2 (Lot 6) — Dashboard de progression & Révision des erreurs
+// ---------------------------------------------------------------------------
+
+export type ScorePoint = {
+  id: number;
+  title: string;
+  score: number;
+  created_at: string;
+};
+
+export type Stats = {
+  total_quizzes: number;
+  quizzes_taken: number;
+  average_score: number | null;
+  best_score: number | null;
+  last_score: number | null;
+  questions_answered: number;
+  questions_correct: number;
+  accuracy: number | null;
+  history: ScorePoint[];
+};
+
+export type Mistake = {
+  quiz_id: number;
+  quiz_title: string;
+  index: number;
+  prompt: string;
+  options: string[];
+  correct_index: number;
+  selected_index: number;
+};
+
+/** Statistiques de progression de l'utilisateur connecté. */
+export async function getStats(): Promise<Stats> {
+  const { data } = await api.get<Stats>('/quizzes/stats/');
+  return data;
+}
+
+/** Liste des questions ratées (pour la révision des erreurs). */
+export async function getMistakes(): Promise<{ count: number; mistakes: Mistake[] }> {
+  const { data } = await api.get<{ count: number; mistakes: Mistake[] }>('/quizzes/mistakes/');
+  return data;
+}

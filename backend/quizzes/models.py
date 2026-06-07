@@ -53,6 +53,14 @@ class Question(models.Model):
     correct_index = models.PositiveSmallIntegerField(
         help_text="Index (0 à 3) de la bonne réponse dans `options`.",
     )
+    # [Lot 6 — Révision des erreurs] Dernière réponse donnée par l'utilisateur.
+    # None = pas encore répondu. On stocke la DERNIÈRE tentative pour pouvoir
+    # lister les questions ratées (selected_index != correct_index).
+    selected_index = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        help_text="Dernier index (0 à 3) choisi par l'utilisateur (None si pas répondu).",
+    )
 
     class Meta:
         ordering = ["index"]

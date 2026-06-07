@@ -1,9 +1,11 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import VerifyEmailBanner from '@/components/VerifyEmailBanner';
 
 export default function Layout() {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -31,6 +33,12 @@ export default function Layout() {
                 <Link to="/upload" className="text-slate-700 hover:text-indigo-600">
                   Nouveau quiz
                 </Link>
+                <Link to="/dashboard" className="text-slate-700 hover:text-indigo-600 hidden sm:inline">
+                  Tableau de bord
+                </Link>
+                <Link to="/review" className="text-slate-700 hover:text-indigo-600 hidden sm:inline">
+                  Révision
+                </Link>
                 <Link to="/history" className="text-slate-700 hover:text-indigo-600">
                   Historique
                 </Link>
@@ -42,6 +50,7 @@ export default function Layout() {
                 >
                   {user.first_name || user.email}
                 </Link>
+                <ThemeToggle theme={theme} onToggle={toggleTheme} />
                 <button onClick={handleLogout} className="btn-secondary">
                   Déconnexion
                 </button>
@@ -54,6 +63,7 @@ export default function Layout() {
                 <Link to="/signup" className="btn-primary">
                   S'inscrire
                 </Link>
+                <ThemeToggle theme={theme} onToggle={toggleTheme} />
               </>
             )}
           </nav>
@@ -102,5 +112,20 @@ export default function Layout() {
         </div>
       </footer>
     </div>
+  );
+}
+
+/** Petit bouton de bascule clair/sombre (MVP2 — Lot 6). */
+function ThemeToggle({ theme, onToggle }: { theme: 'light' | 'dark'; onToggle: () => void }) {
+  const isDark = theme === 'dark';
+  return (
+    <button
+      onClick={onToggle}
+      className="w-9 h-9 grid place-items-center rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50"
+      title={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
+      aria-label="Basculer le thème clair/sombre"
+    >
+      {isDark ? '☀️' : '🌙'}
+    </button>
   );
 }

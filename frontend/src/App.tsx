@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import Layout from '@/components/Layout';
 import RequireAuth from '@/components/RequireAuth';
 import HomePage from '@/pages/HomePage';
@@ -12,6 +13,8 @@ import UploadPage from '@/pages/UploadPage';
 import QuizPage from '@/pages/QuizPage';
 import HistoryPage from '@/pages/HistoryPage';
 import ProfilePage from '@/pages/ProfilePage';
+import DashboardPage from '@/pages/DashboardPage';
+import ReviewMistakesPage from '@/pages/ReviewMistakesPage';
 import MentionsLegalesPage from '@/pages/legal/MentionsLegalesPage';
 import ConfidentialitePage from '@/pages/legal/ConfidentialitePage';
 import CGUPage from '@/pages/legal/CGUPage';
@@ -19,9 +22,10 @@ import CookiesPage from '@/pages/legal/CookiesPage';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
           <Route element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />
@@ -69,11 +73,28 @@ export default function App() {
                 </RequireAuth>
               }
             />
+            <Route
+              path="dashboard"
+              element={
+                <RequireAuth>
+                  <DashboardPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="review"
+              element={
+                <RequireAuth>
+                  <ReviewMistakesPage />
+                </RequireAuth>
+              }
+            />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
