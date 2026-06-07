@@ -49,3 +49,47 @@ def send_email(to_email: str, subject: str, body: str) -> None:
     except SMTPException as exc:
         # Autres erreurs SMTP (expéditeur non validé, quota dépassé, réseau…).
         raise EmailError(f"Échec de l'envoi de l'email via SMTP : {exc}") from exc
+
+
+# ----------------------------------------------------------------------------
+# Emails métier (validation de compte, réinitialisation de mot de passe)
+# ----------------------------------------------------------------------------
+
+def _frontend(path: str) -> str:
+    """Construit une URL absolue vers le frontend (pour les liens des emails)."""
+    from django.conf import settings as s
+    return f"{s.FRONTEND_URL.rstrip('/')}{path}"
+
+
+def send_verification_email(user) -> None:
+    """Email de confirmation d'adresse, envoyé à l'inscription."""
+    from .tokens import make_email_verify_token
+    link = _frontend(f"/verify-email?token={make_email_verify_token(user)}")
+    body = (
+        "Bonjour,\n\n"
+        "Bienvenue sur EduTutor IA ! Pour confirmer votre adresse email, "
+        "cliquez sur le lien ci-dessous :\n\n"
+        f"{link}\n\n"
+        "Ce lien est valable 3 jours. Vous pouvez utiliser votre compte dès "
+        "maintenant ; cette confirmation nous permet simplement de vérifier "
+        "votre adresse.\n\n"
+        "— L'équipe EduTutor IA"
+    )
+    send_email(user.email, "Confirmez votre adresse email — EduTutor IA", body)
+
+
+def send_password_reset_email(user) -> None:
+    """Email de réinitialisation de mot de passe (lien avec token)."""
+    from .tokens import make_password_reset_tokens
+    uidb64, token = make_password_reset_tokens(user)
+    link = _frontend(f"/reset-password?uid={uidb64}&token={token}")
+    body = (
+        "Bonjour,\n\n"
+        "Vous avez demandé la réinitialisation de votre mot de passe EduTutor IA. "
+        "Cliquez sur le lien ci-dessous pour en choisir un nouveau :\n\n"
+        f"{link}\n\n"
+        "Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet "
+        "email : votre mot de passe restera inchangé.\n\n"
+        "— L'équipe EduTutor IA"
+    )
+    send_email(user.email, "Réinitialisation de votre mot de passe — EduTutor IA", body)
