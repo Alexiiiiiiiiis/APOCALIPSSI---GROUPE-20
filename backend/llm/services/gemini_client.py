@@ -24,10 +24,11 @@ GEMINI_URL_TEMPLATE = "https://generativelanguage.googleapis.com/v1beta/models/{
 class GeminiLLMClient(LLMClient):
     """Client HTTP pour l'API Generative Language de Google (Gemini)."""
 
-    def __init__(self) -> None:
-        self.api_key = settings.GEMINI_API_KEY
-        self.model = settings.GEMINI_MODEL
-        self.timeout = settings.LLM_API_TIMEOUT
+    def __init__(self, *, api_key: str | None = None, model: str | None = None,
+                 timeout: int | None = None) -> None:
+        self.api_key = api_key if api_key is not None else settings.GEMINI_API_KEY
+        self.model = model or settings.GEMINI_MODEL
+        self.timeout = timeout or settings.LLM_API_TIMEOUT
         if not self.api_key:
             raise LLMError(
                 "GEMINI_API_KEY manquante. Créez une clé gratuite sur "

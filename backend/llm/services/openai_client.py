@@ -17,12 +17,14 @@ from .openai_compatible import OpenAICompatibleClient
 class OpenAILLMClient(OpenAICompatibleClient):
     """Client pour l'API Chat Completions d'OpenAI."""
 
-    def __init__(self) -> None:
+    def __init__(self, *, api_key: str | None = None, model: str | None = None,
+                 timeout: int | None = None) -> None:
         super().__init__(
-            api_key=settings.OPENAI_API_KEY,
-            model=settings.OPENAI_MODEL,
+            api_key=api_key if api_key is not None else settings.OPENAI_API_KEY,
+            model=model or settings.OPENAI_MODEL,
             base_url="https://api.openai.com/v1",
             provider_label="OpenAI",
             hint="Clé + crédit sur https://platform.openai.com/api-keys.",
             json_mode=True,
+            timeout=timeout,
         )

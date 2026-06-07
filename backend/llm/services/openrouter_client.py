@@ -16,14 +16,16 @@ from .openai_compatible import OpenAICompatibleClient
 
 
 class OpenRouterLLMClient(OpenAICompatibleClient):
-    def __init__(self) -> None:
+    def __init__(self, *, api_key: str | None = None, model: str | None = None,
+                 timeout: int | None = None) -> None:
         super().__init__(
-            api_key=settings.OPENROUTER_API_KEY,
-            model=settings.OPENROUTER_MODEL,
+            api_key=api_key if api_key is not None else settings.OPENROUTER_API_KEY,
+            model=model or settings.OPENROUTER_MODEL,
             base_url="https://openrouter.ai/api/v1",
             provider_label="OpenRouter",
             hint="Clé sur https://openrouter.ai/keys (modèles « :free » disponibles).",
             json_mode=False,
+            timeout=timeout,
             # En-têtes recommandés par OpenRouter pour identifier l'app (optionnels).
             extra_headers={
                 "HTTP-Referer": "https://github.com/melafrit/IPSSI_APOCAL_KIT",

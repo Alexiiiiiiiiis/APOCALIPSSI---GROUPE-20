@@ -21,23 +21,23 @@ def user(db) -> User:
 
 
 def test_signup_creates_user(client):
+    # Lot 3 : inscription par EMAIL (username = email en interne).
     response = client.post(
         "/api/accounts/signup/",
         {
-            "username": "bob",
             "email":    "bob@test.com",
             "password": "motdepasse123",
         },
         format="json",
     )
     assert response.status_code == 201, response.data
-    assert User.objects.filter(username="bob").exists()
+    assert User.objects.filter(email="bob@test.com").exists()
 
 
 def test_signup_requires_email(client):
     response = client.post(
         "/api/accounts/signup/",
-        {"username": "charlie", "password": "motdepasse123"},
+        {"password": "motdepasse123"},
         format="json",
     )
     assert response.status_code == 400
@@ -46,18 +46,18 @@ def test_signup_requires_email(client):
 def test_login_returns_token(client, user):
     response = client.post(
         "/api/accounts/login/",
-        {"username": "alice", "password": "motdepasse123"},
+        {"email": "alice@test.com", "password": "motdepasse123"},
         format="json",
     )
     assert response.status_code == 200, response.data
     assert "token" in response.data
-    assert response.data["user"]["username"] == "alice"
+    assert response.data["user"]["email"] == "alice@test.com"
 
 
 def test_login_with_wrong_password(client, user):
     response = client.post(
         "/api/accounts/login/",
-        {"username": "alice", "password": "wrong"},
+        {"email": "alice@test.com", "password": "wrong"},
         format="json",
     )
     assert response.status_code == 400

@@ -43,6 +43,14 @@ class SignupView(APIView):
 
     @extend_schema(request=SignupSerializer, responses={201: UserSerializer})
     def post(self, request):
+        # Lot 8 : l'admin peut fermer les inscriptions depuis l'interface.
+        from administration.models import SiteConfig
+        if not SiteConfig.load().allow_signups:
+            return Response(
+                {"detail": "Les inscriptions sont actuellement fermées."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         serializer = SignupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()

@@ -12,12 +12,14 @@ from .openai_compatible import OpenAICompatibleClient
 
 
 class GroqLLMClient(OpenAICompatibleClient):
-    def __init__(self) -> None:
+    def __init__(self, *, api_key: str | None = None, model: str | None = None,
+                 timeout: int | None = None) -> None:
         super().__init__(
-            api_key=settings.GROQ_API_KEY,
-            model=settings.GROQ_MODEL,
+            api_key=api_key if api_key is not None else settings.GROQ_API_KEY,
+            model=model or settings.GROQ_MODEL,
             base_url="https://api.groq.com/openai/v1",
             provider_label="Groq",
             hint="Clé GRATUITE sur https://console.groq.com/keys.",
             json_mode=True,
+            timeout=timeout,
         )

@@ -31,6 +31,7 @@ class OpenAICompatibleClient(LLMClient):
         hint: str = "",
         json_mode: bool = True,
         extra_headers: dict | None = None,
+        timeout: int | None = None,
     ) -> None:
         self.api_key = api_key
         self.model = model
@@ -38,7 +39,7 @@ class OpenAICompatibleClient(LLMClient):
         self.provider_label = provider_label
         self.json_mode = json_mode          # response_format json_object supporté ?
         self.extra_headers = extra_headers or {}
-        self.timeout = settings.LLM_API_TIMEOUT
+        self.timeout = timeout or settings.LLM_API_TIMEOUT
         if not self.api_key:
             raise LLMError(
                 f"{provider_label} : clé API manquante. "

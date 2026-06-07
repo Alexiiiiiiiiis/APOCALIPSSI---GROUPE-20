@@ -31,30 +31,43 @@ class PingView(APIView):
         description="Ping LLM — utile pour vérifier l'intégration Ollama.",
     )
     def get(self, _request):
-        backend = settings.LLM_BACKEND
+        # Config EFFECTIVE (base prioritaire, repli .env) — Lot 8.
+        from .services.factory import resolve_active
+        conf = resolve_active()
+        backend = conf["backend"]
 
         if backend == "mock":
             return Response({
                 "backend":      "mock",
                 "model":        "mock-model",
                 "ollama_alive": False,
-                "message":      "Mock LLM actif (configurer LLM_BACKEND=ollama pour utiliser Ollama).",
+                "message":      "Mock LLM actif (choisissez un autre fournisseur dans l'admin).",
             })
 
+        if backend != "ollama":
+            # Backend cloud : pas de ping HTTP ici (éviter de consommer du quota).
+            return Response({
+                "backend": backend,
+                "model":   conf["model"],
+                "message": f"Backend cloud « {backend} » configuré.",
+            })
+
+        host = conf["ollama_host"] or settings.OLLAMA_HOST
+        model = conf["model"] or settings.OLLAMA_MODEL
         try:
-            resp = requests.get(f"{settings.OLLAMA_HOST}/api/tags", timeout=2)
+            resp = requests.get(f"{host}/api/tags", timeout=2)
             resp.raise_for_status()
             tags = resp.json().get("models", [])
-            target = settings.OLLAMA_MODEL.split(":")[0]
+            target = model.split(":")[0]
             model_present = any(m.get("name", "").startswith(target) for m in tags)
             return Response({
                 "backend":      "ollama",
-                "model":        settings.OLLAMA_MODEL,
+                "model":        model,
                 "ollama_alive": True,
                 "model_loaded": model_present,
                 "message":      (
                     "Ollama répond ✓" if model_present
-                    else f"Ollama répond mais le modèle {settings.OLLAMA_MODEL} n'est pas téléchargé. "
+                    else f"Ollama répond mais le modèle {model} n'est pas téléchargé. "
                          "Lancez : make pull-model"
                 ),
             })
@@ -62,7 +75,7 @@ class PingView(APIView):
             return Response(
                 {
                     "backend":      "ollama",
-                    "model":        settings.OLLAMA_MODEL,
+                    "model":        model,
                     "ollama_alive": False,
                     "message":      f"Ollama injoignable : {exc}",
                 },
@@ -86,6 +99,16 @@ class GenerateQuizView(APIView):
         ),
     )
     def post(self, request):
+        # Lot 8 : si l'admin exige un email vérifié, on bloque sinon.
+        from accounts.models import get_or_create_profile
+        from administration.models import SiteConfig
+        if SiteConfig.load().require_email_verification \
+                and not get_or_create_profile(request.user).email_verified:
+            return Response(
+                {"detail": "Veuillez confirmer votre adresse email avant de générer un quiz."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         serializer = GenerateQuizSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         title       = serializer.validated_data["title"]

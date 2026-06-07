@@ -17,12 +17,14 @@ from .quiz_prompt import build_full_prompt, parse_and_validate_quiz
 class OllamaLLMClient(LLMClient):
     """Client HTTP minimal pour Ollama (/api/generate)."""
 
-    def __init__(self) -> None:
-        self.host = settings.OLLAMA_HOST.rstrip("/")
-        self.model = settings.OLLAMA_MODEL
+    def __init__(self, *, model: str | None = None, host: str | None = None,
+                 timeout: int | None = None) -> None:
+        # Overrides éventuels (config admin en base, Lot 8) sinon valeurs .env.
+        self.host = (host or settings.OLLAMA_HOST).rstrip("/")
+        self.model = model or settings.OLLAMA_MODEL
         # Configurable via OLLAMA_TIMEOUT (.env). Défaut 600 s : une génération
         # 8B sur CPU peut dépasser largement 120 s (cf. perturbation J2 latence).
-        self.timeout = settings.OLLAMA_TIMEOUT
+        self.timeout = timeout or settings.OLLAMA_TIMEOUT
 
     def generate_quiz(self, source_text: str, title: str) -> list[dict]:
         # Ollama /api/generate attend UN prompt unique (pas de séparation

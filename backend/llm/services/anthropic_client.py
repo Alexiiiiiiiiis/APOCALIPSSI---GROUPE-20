@@ -24,10 +24,11 @@ ANTHROPIC_VERSION = "2023-06-01"
 class AnthropicLLMClient(LLMClient):
     """Client HTTP pour l'API Messages d'Anthropic (Claude)."""
 
-    def __init__(self) -> None:
-        self.api_key = settings.ANTHROPIC_API_KEY
-        self.model = settings.ANTHROPIC_MODEL
-        self.timeout = settings.LLM_API_TIMEOUT
+    def __init__(self, *, api_key: str | None = None, model: str | None = None,
+                 timeout: int | None = None) -> None:
+        self.api_key = api_key if api_key is not None else settings.ANTHROPIC_API_KEY
+        self.model = model or settings.ANTHROPIC_MODEL
+        self.timeout = timeout or settings.LLM_API_TIMEOUT
         if not self.api_key:
             raise LLMError(
                 "ANTHROPIC_API_KEY manquante. Renseignez-la dans le .env, ou utilisez "
