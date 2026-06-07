@@ -7,6 +7,40 @@ Versioning : [SemVer](https://semver.org/lang/fr/).
 
 ---
 
+## [1.2.0] — 2026-06-07
+
+🛠️ **Interface d'administration (hybride React + Django admin).**
+
+### Ajouté
+
+#### Configuration en base (modifiable depuis l'UI, sans redéployer)
+- `llm.LLMConfig` (singleton) : fournisseur, modèle, clés API, host Ollama, timeout
+- `administration.SiteConfig` (singleton) : nom de l'app, inscriptions on/off,
+  validation email obligatoire, bannière globale
+- Priorité : **base prioritaire, repli `.env`** (factory `resolve_active()`)
+- `llm/providers.py` : registre central des fournisseurs + aide de configuration
+
+#### Interface admin React (`/admin`, réservée staff)
+- Onglets : vue d'ensemble, config LLM (avec **aide par fournisseur** + clés
+  masquées), config app, utilisateurs, données
+- Gestion des utilisateurs : recherche, activer/désactiver, rôle admin,
+  forcer/renvoyer la validation d'email, supprimer (avec garde-fous)
+- Données : seed + réinitialisation destructive (double confirmation)
+- Bannière globale + nom d'app dynamiques (SiteConfigContext)
+
+#### API
+- Endpoints `/api/admin/...` (IsAdminUser) ; endpoint public `/api/site-config/`
+- `/me` expose désormais `is_staff`
+
+### Tests
+- 12 tests `administration` ; tests `accounts` mis à jour (auth par email).
+  Suite complète : **34 passed**.
+
+### Documentation
+- `docs/09-admin.md` ; README mis à jour (badge 1.2.0)
+
+---
+
 ## [1.1.0] — 2026-06-07
 
 🚀 **Enrichissement du kit avant la semaine : comptes complets, multi-LLM,

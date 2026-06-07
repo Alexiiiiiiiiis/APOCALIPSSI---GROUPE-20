@@ -26,6 +26,7 @@ aux perturbations de la semaine.
 | **Comptes** | Inscription / connexion **par email**, validation d'email, mot de passe oublié, **page profil** (modifier, supprimer) |
 | **Quiz** | Upload PDF/texte, génération LLM de 10 QCM, correction + score, historique |
 | **MVP2 (démos)** | Tableau de bord de progression, révision des erreurs, **mode sombre** |
+| **Admin** | Interface d'admin : config LLM/app depuis l'UI, gestion des utilisateurs |
 | **LLM** | 9 fournisseurs au choix (Ollama local par défaut + 7 cloud + mock) |
 | **Emails** | Bascule auto console (dev) / Brevo (réel) |
 | **Légal** | 4 pages légales **vierges** à compléter |
@@ -90,8 +91,14 @@ Ouvrez ensuite :
 | **Tableau de bord** | `/dashboard` | KPIs + graphique de progression |
 | **Révision** | `/review` | Vos questions ratées (à revoir) |
 | Profil | `/profile` | Modifier email/nom/mot de passe, supprimer le compte |
+| **Admin** | `/admin` | (staff) config LLM/app, utilisateurs, données — voir `docs/09-admin.md` |
 | Légal | `/legal/...` | Mentions, confidentialité, CGU, cookies (à compléter) |
 
+👑 **Devenir admin** : créez un super-utilisateur, un lien « Admin » apparaît alors
+dans l'en-tête :
+```bash
+docker exec -it apocalipssi-2026-backend python manage.py createsuperuser
+```
 🌙 **Mode sombre** : bouton lune/soleil en haut à droite (mémorisé).
 ✉️ **Validation d'email** : à l'inscription, un email part. En dev (sans Brevo),
 il s'affiche dans les **logs du backend** :
@@ -259,6 +266,7 @@ Requests**, faites-vous **relire**. Voir `docs/05-ci-cd.md` et `docs/07-bonnes-p
 | CI/CD, commits | `docs/05-ci-cd.md` |
 | Bonnes pratiques agiles | `docs/07-bonnes-pratiques.md` |
 | Idées pour la Release 2 | `docs/08-mvp2-idees.md` |
+| Interface d'administration | `docs/09-admin.md` |
 | Cours Agile/Scrum | <https://mohamedelafrit.com/teaching/Master_Classe_Agile/cours.html> |
 | Infos de la semaine | <https://apocal.mohamedelafrit.com> |
 

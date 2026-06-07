@@ -1,7 +1,7 @@
 # IPSSI_APOCAL_KIT 🚀
 
 [![CI](https://github.com/melafrit/IPSSI_APOCAL_KIT/actions/workflows/ci.yml/badge.svg)](https://github.com/melafrit/IPSSI_APOCAL_KIT/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.1.0-indigo)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.0-indigo)](./CHANGELOG.md)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-amber.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
 [![React](https://img.shields.io/badge/react-18-cyan.svg)](https://react.dev/)
@@ -22,6 +22,7 @@ de LLM open source.
   passe oublié, **page profil** (modifier / supprimer son compte)
 - **Quiz** : upload PDF/texte → génération LLM de 10 QCM → correction + score → historique
 - **MVP2 (démos)** : tableau de bord de progression, révision des erreurs, **mode sombre**
+- **Admin** : interface d'admin (config LLM/app depuis l'UI, gestion des utilisateurs)
 - **LLM** : 9 fournisseurs au choix · **Emails** : console (dev) / Brevo (réel)
 - **Légal** : 4 pages légales vierges à compléter
 
@@ -70,7 +71,7 @@ open http://localhost:8000/api/docs  # Swagger UI
 
 👉 **Démarrage guidé pour les étudiants : [GUIDE-ETUDIANT.md](./GUIDE-ETUDIANT.md)**
 
-Le dossier [`docs/`](./docs) contient 9 fiches thématiques :
+Le dossier [`docs/`](./docs) contient 10 fiches thématiques :
 
 | Fichier | Sujet |
 |---|---|
@@ -83,6 +84,7 @@ Le dossier [`docs/`](./docs) contient 9 fiches thématiques :
 | [06-troubleshooting.md](./docs/06-troubleshooting.md) | Docker, ports en conflit, Ollama, CORS |
 | [07-bonnes-pratiques.md](./docs/07-bonnes-pratiques.md) | ADR, post-mortem, INVEST, MoSCoW + lien cours Agile |
 | [08-mvp2-idees.md](./docs/08-mvp2-idees.md) | Catalogue d'idées MVP2 + méthode de priorisation |
+| [09-admin.md](./docs/09-admin.md) | Interface d'admin : config LLM/app, utilisateurs, données |
 
 ---
 
