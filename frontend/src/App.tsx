@@ -12,6 +12,10 @@ import UploadPage from '@/pages/UploadPage';
 import QuizPage from '@/pages/QuizPage';
 import HistoryPage from '@/pages/HistoryPage';
 import ProfilePage from '@/pages/ProfilePage';
+import MentionsLegalesPage from '@/pages/legal/MentionsLegalesPage';
+import ConfidentialitePage from '@/pages/legal/ConfidentialitePage';
+import CGUPage from '@/pages/legal/CGUPage';
+import CookiesPage from '@/pages/legal/CookiesPage';
 
 export default function App() {
   return (
@@ -25,6 +29,12 @@ export default function App() {
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route path="reset-password" element={<ResetPasswordPage />} />
             <Route path="verify-email" element={<VerifyEmailPage />} />
+
+            {/* Pages légales (publiques, à compléter par les étudiants) */}
+            <Route path="legal/mentions-legales" element={<MentionsLegalesPage />} />
+            <Route path="legal/confidentialite" element={<ConfidentialitePage />} />
+            <Route path="legal/cgu" element={<CGUPage />} />
+            <Route path="legal/cookies" element={<CookiesPage />} />
 
             {/* Routes protégées */}
             <Route

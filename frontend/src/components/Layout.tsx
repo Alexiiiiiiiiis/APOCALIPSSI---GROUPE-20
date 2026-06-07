@@ -68,19 +68,37 @@ export default function Layout() {
       </main>
 
       <footer className="border-t border-slate-200 mt-12">
-        <div className="max-w-6xl mx-auto px-4 py-6 text-sm text-slate-500 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            EduTutor IA — APOCAL'IPSSI 2026 ·
-            <a
-              href="https://mohamedelafrit.com/teaching/Master_Classe_Agile/cours.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-1 text-indigo-600 hover:underline"
-            >
-              Cours Agile
-            </a>
+        <div className="max-w-6xl mx-auto px-4 py-6 space-y-3 text-sm text-slate-500">
+          {/* Liens légaux (pages à compléter par les étudiants) */}
+          <nav className="flex flex-wrap gap-x-4 gap-y-1">
+            <Link to="/legal/mentions-legales" className="hover:text-indigo-600">
+              Mentions légales
+            </Link>
+            <Link to="/legal/confidentialite" className="hover:text-indigo-600">
+              Confidentialité
+            </Link>
+            <Link to="/legal/cgu" className="hover:text-indigo-600">
+              CGU
+            </Link>
+            <Link to="/legal/cookies" className="hover:text-indigo-600">
+              Cookies
+            </Link>
+          </nav>
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              EduTutor IA — APOCAL'IPSSI 2026 ·
+              <a
+                href="https://mohamedelafrit.com/teaching/Master_Classe_Agile/cours.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-1 text-indigo-600 hover:underline"
+              >
+                Cours Agile
+              </a>
+            </div>
+            <div className="font-mono text-xs">CC BY-NC-SA 4.0</div>
           </div>
-          <div className="font-mono text-xs">CC BY-NC-SA 4.0</div>
         </div>
       </footer>
     </div>
