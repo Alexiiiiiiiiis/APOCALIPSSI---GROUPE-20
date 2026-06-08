@@ -86,6 +86,11 @@ yarn-error.log*
 .cache/
 .parcel-cache/
 
+# --- Prompts privés du dossier d'avant-projet (NON destinés aux étudiants) ---
+# Le code des diagrammes (diagrammes/) et les documents sont versionnés ;
+# seuls les prompts de génération restent privés au formateur.
+docs/etude-avant-projet/prompts/
+
 # --- Tests ---
 coverage/
 .nyc_output/
