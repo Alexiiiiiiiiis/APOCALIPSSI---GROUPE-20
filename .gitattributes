@@ -9,3 +9,13 @@ Makefile    text eol=lf
 
 # Laisser Git gérer le reste automatiquement.
 *           text=auto
+
+# Fichiers binaires : jamais de conversion de fins de ligne (sinon corruption).
+*.docx      binary
+*.xlsx      binary
+*.pdf       binary
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.ico       binary
+*.mp3       binary
