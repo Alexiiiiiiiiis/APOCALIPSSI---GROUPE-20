@@ -50,7 +50,7 @@ services:
       [
         "sh",
         "-c",
-        "python manage.py migrate --noinput && python manage.py collectstatic --noinput && exec gunicorn apocal.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120 --access-logfile - --error-logfile -",
+        "python manage.py migrate --noinput && python manage.py collectstatic --noinput && python manage.py bootstrap_demo && exec gunicorn apocal.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120 --access-logfile - --error-logfile -",
       ]
     healthcheck:
       test:
