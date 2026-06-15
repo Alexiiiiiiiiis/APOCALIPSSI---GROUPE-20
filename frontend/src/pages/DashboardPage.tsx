@@ -53,7 +53,9 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold text-slate-900">Tableau de bord</h1>
           <p className="text-slate-500 text-sm">Votre progression sur EduTutor IA.</p>
         </div>
-        <Link to="/upload" className="btn-primary">+ Nouveau quiz</Link>
+        <Link to="/upload" className="btn-primary">
+          + Nouveau quiz
+        </Link>
       </div>
 
       {!hasData ? (
@@ -62,31 +64,43 @@ export default function DashboardPage() {
           <p className="text-slate-600 mb-4">
             Passez votre premier quiz pour voir vos statistiques apparaître ici.
           </p>
-          <Link to="/upload" className="btn-primary">Créer un quiz</Link>
+          <Link to="/upload" className="btn-primary">
+            Créer un quiz
+          </Link>
         </div>
       ) : (
         <>
           {/* KPIs */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <KpiCard label="Quiz passés" value={String(stats.quizzes_taken)}
-                     hint={`${stats.total_quizzes} créés au total`} />
-            <KpiCard label="Score moyen"
-                     value={stats.average_score !== null ? `${stats.average_score}/10` : '—'} />
-            <KpiCard label="Meilleur score"
-                     value={stats.best_score !== null ? `${stats.best_score}/10` : '—'} />
-            <KpiCard label="Précision"
-                     value={stats.accuracy !== null ? `${stats.accuracy}%` : '—'}
-                     hint={`${stats.questions_correct}/${stats.questions_answered} bonnes réponses`} />
+            <KpiCard
+              label="Quiz passés"
+              value={String(stats.quizzes_taken)}
+              hint={`${stats.total_quizzes} créés au total`}
+            />
+            <KpiCard
+              label="Score moyen"
+              value={stats.average_score !== null ? `${stats.average_score}/10` : '—'}
+            />
+            <KpiCard
+              label="Meilleur score"
+              value={stats.best_score !== null ? `${stats.best_score}/10` : '—'}
+            />
+            <KpiCard
+              label="Précision"
+              value={stats.accuracy !== null ? `${stats.accuracy}%` : '—'}
+              hint={`${stats.questions_correct}/${stats.questions_answered} bonnes réponses`}
+            />
           </div>
 
           {/* Graphique de progression (barres maison) */}
           <div className="card">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">
-              Progression des scores
-            </h2>
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">Progression des scores</h2>
             <div className="flex items-end gap-2 h-48 border-b border-l border-slate-200 pl-2 pb-px">
               {stats.history.map((p) => (
-                <div key={p.id} className="flex-1 flex flex-col items-center justify-end h-full group">
+                <div
+                  key={p.id}
+                  className="flex-1 flex flex-col items-center justify-end h-full group"
+                >
                   <span className="text-xs text-slate-500 mb-1">{p.score}</span>
                   <div
                     className={`w-full rounded-t ${barColor(p.score)} transition-all`}
@@ -97,14 +111,18 @@ export default function DashboardPage() {
               ))}
             </div>
             <p className="text-xs text-slate-400 mt-2">
-              Chaque barre = un quiz passé, dans l'ordre chronologique. Survolez
-              pour voir le détail.
+              Chaque barre = un quiz passé, dans l'ordre chronologique. Survolez pour voir le
+              détail.
             </p>
           </div>
 
           <div className="flex gap-3">
-            <Link to="/review" className="btn-secondary">📕 Réviser mes erreurs</Link>
-            <Link to="/history" className="btn-secondary">📚 Voir l'historique</Link>
+            <Link to="/review" className="btn-secondary">
+              📕 Réviser mes erreurs
+            </Link>
+            <Link to="/history" className="btn-secondary">
+              📚 Voir l'historique
+            </Link>
           </div>
         </>
       )}

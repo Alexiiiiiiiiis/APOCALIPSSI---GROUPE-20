@@ -36,8 +36,8 @@ export default function ForgotPasswordPage() {
       <div className="card">
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Mot de passe oublié</h1>
         <p className="text-sm text-slate-500 mb-6">
-          Saisissez votre email : si un compte existe, vous recevrez un lien pour
-          choisir un nouveau mot de passe.
+          Saisissez votre email : si un compte existe, vous recevrez un lien pour choisir un nouveau
+          mot de passe.
         </p>
 
         {message ? (

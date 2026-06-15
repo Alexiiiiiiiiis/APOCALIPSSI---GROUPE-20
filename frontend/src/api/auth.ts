@@ -110,14 +110,11 @@ export async function updateProfile(input: {
 }
 
 /** Change le mot de passe (ancien requis). Le backend renvoie un nouveau token. */
-export async function changePassword(
-  old_password: string,
-  new_password: string,
-): Promise<string> {
-  const { data } = await api.post<{ detail: string; token: string }>(
-    '/accounts/change-password/',
-    { old_password, new_password },
-  );
+export async function changePassword(old_password: string, new_password: string): Promise<string> {
+  const { data } = await api.post<{ detail: string; token: string }>('/accounts/change-password/', {
+    old_password,
+    new_password,
+  });
   // Le mot de passe a changé -> on remplace le token stocké par le nouveau.
   setToken(data.token);
   return data.detail;

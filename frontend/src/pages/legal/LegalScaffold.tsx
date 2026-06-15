@@ -12,8 +12,7 @@
 import type { ReactNode } from 'react';
 
 /** URL du cours de référence sur la réglementation des données. */
-export const REGLEMENTATION_URL =
-  'https://mohamedelafrit.com/teaching/Reglementation_des_Donnees';
+export const REGLEMENTATION_URL = 'https://mohamedelafrit.com/teaching/Reglementation_des_Donnees';
 
 export type LegalSection = {
   /** Titre de la rubrique (ce que la loi attend de voir). */
@@ -40,9 +39,8 @@ export default function LegalScaffold({ title, intro, sections, children }: Prop
       <div className="mb-8 p-4 bg-amber-50 border-l-4 border-amber-400 rounded text-sm text-amber-900">
         <p className="font-semibold mb-1">📝 Page à compléter par votre équipe</p>
         <p>
-          Ce document est un <strong>modèle vierge</strong>. Remplacez chaque
-          indication en italique par le contenu réel de votre projet. Besoin
-          d'aide ?{' '}
+          Ce document est un <strong>modèle vierge</strong>. Remplacez chaque indication en italique
+          par le contenu réel de votre projet. Besoin d'aide ?{' '}
           <a
             href={REGLEMENTATION_URL}
             target="_blank"
@@ -69,8 +67,8 @@ export default function LegalScaffold({ title, intro, sections, children }: Prop
       {children}
 
       <p className="text-xs text-slate-400 mt-10 pt-4 border-t border-slate-200">
-        Dernière mise à jour : <em>à compléter</em>. Document rédigé dans le cadre
-        pédagogique APOCAL'IPSSI 2026.
+        Dernière mise à jour : <em>à compléter</em>. Document rédigé dans le cadre pédagogique
+        APOCAL'IPSSI 2026.
       </p>
     </article>
   );

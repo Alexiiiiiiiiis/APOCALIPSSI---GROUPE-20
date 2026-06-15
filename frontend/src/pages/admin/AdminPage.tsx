@@ -29,8 +29,7 @@ export default function AdminPage() {
       <div>
         <h1 className="text-3xl font-bold text-slate-900">Administration</h1>
         <p className="text-slate-500 text-sm">
-          Réservé aux administrateurs. Configurez l'application, le LLM et gérez
-          les utilisateurs.
+          Réservé aux administrateurs. Configurez l'application, le LLM et gérez les utilisateurs.
         </p>
       </div>
 

@@ -202,9 +202,7 @@ export default function ProfilePage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Confirmer
-              </label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Confirmer</label>
               <input
                 type="password"
                 required
@@ -252,8 +250,8 @@ export default function ProfilePage() {
       <section className="card border-2 border-rose-200">
         <h2 className="text-lg font-semibold text-rose-700 mb-2">Zone de danger</h2>
         <p className="text-sm text-slate-600 mb-4">
-          La suppression de votre compte est <strong>définitive</strong> et efface
-          toutes vos données (quiz, historique). Cette action est irréversible.
+          La suppression de votre compte est <strong>définitive</strong> et efface toutes vos
+          données (quiz, historique). Cette action est irréversible.
         </p>
         {delErr && (
           <div className="mb-4 p-3 bg-rose-50 border-l-4 border-rose-500 text-sm text-rose-900 rounded">

@@ -60,7 +60,9 @@ export default function SiteConfigTab() {
       )}
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Nom de l'application</label>
+        <label className="block text-sm font-medium text-slate-700 mb-1">
+          Nom de l'application
+        </label>
         <input
           type="text"
           value={form.app_name}
@@ -113,7 +115,9 @@ export default function SiteConfigTab() {
       </label>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Message de la bannière</label>
+        <label className="block text-sm font-medium text-slate-700 mb-1">
+          Message de la bannière
+        </label>
         <textarea
           value={form.banner_message}
           onChange={(e) => set('banner_message', e.target.value)}

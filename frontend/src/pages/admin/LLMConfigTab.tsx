@@ -9,9 +9,7 @@
  * si une clé est « déjà définie ». Laisser le champ vide = ne pas changer.
  */
 import { useEffect, useState, type FormEvent } from 'react';
-import {
-  getLLMConfig, updateLLMConfig, type LLMConfig, type ProviderInfo,
-} from '@/api/admin';
+import { getLLMConfig, updateLLMConfig, type LLMConfig, type ProviderInfo } from '@/api/admin';
 import { getApiErrorMessage } from '@/api/errors';
 
 export default function LLMConfigTab() {
@@ -141,8 +139,12 @@ export default function LLMConfigTab() {
             </div>
             <p>{provider.help}</p>
             {provider.keys_url && (
-              <a href={provider.keys_url} target="_blank" rel="noopener noreferrer"
-                 className="underline hover:no-underline font-medium">
+              <a
+                href={provider.keys_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:no-underline font-medium"
+              >
                 Obtenir une clé API →
               </a>
             )}
@@ -194,8 +196,12 @@ export default function LLMConfigTab() {
               autoComplete="off"
             />
             {keyAlreadySet && (
-              <button type="button" onClick={clearKey} disabled={loading}
-                      className="text-xs text-rose-600 hover:underline mt-1">
+              <button
+                type="button"
+                onClick={clearKey}
+                disabled={loading}
+                className="text-xs text-rose-600 hover:underline mt-1"
+              >
                 Supprimer la clé enregistrée
               </button>
             )}
@@ -223,9 +229,9 @@ export default function LLMConfigTab() {
       {/* Avertissement sécurité (parti pris pédagogique du kit) */}
       <div className="p-3 bg-amber-50 border-l-4 border-amber-400 rounded text-xs text-amber-900">
         ⚠️ <strong>Sécurité</strong> : les clés API sont stockées <em>en base</em>
-        (jamais réaffichées en clair). C'est acceptable pour ce kit pédagogique,
-        mais en <strong>production</strong> il faudrait les chiffrer (ex. Fernet)
-        ou utiliser un gestionnaire de secrets.
+        (jamais réaffichées en clair). C'est acceptable pour ce kit pédagogique, mais en{' '}
+        <strong>production</strong> il faudrait les chiffrer (ex. Fernet) ou utiliser un
+        gestionnaire de secrets.
       </div>
     </div>
   );

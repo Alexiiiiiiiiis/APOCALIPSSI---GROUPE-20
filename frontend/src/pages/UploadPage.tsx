@@ -19,7 +19,7 @@ export default function UploadPage() {
     try {
       const quiz = await generateQuiz({
         title,
-        pdf: mode === 'pdf' ? pdf ?? undefined : undefined,
+        pdf: mode === 'pdf' ? (pdf ?? undefined) : undefined,
         source_text: mode === 'text' ? sourceText : undefined,
       });
       navigate(`/quiz/${quiz.id}`);
@@ -45,9 +45,7 @@ export default function UploadPage() {
 
       <form onSubmit={handleSubmit} className="card space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
-            Titre du cours
-          </label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Titre du cours</label>
           <input
             type="text"
             required
@@ -113,7 +111,8 @@ export default function UploadPage() {
         <button type="submit" disabled={loading} className="btn-primary w-full">
           {loading ? (
             <>
-              <span className="animate-spin">⏳</span> Génération en cours… (1 à 5 min sur CPU, patientez)
+              <span className="animate-spin">⏳</span> Génération en cours… (1 à 5 min sur CPU,
+              patientez)
             </>
           ) : (
             <>🚀 Générer le quiz</>
@@ -121,8 +120,8 @@ export default function UploadPage() {
         </button>
 
         <p className="text-xs text-slate-500 text-center">
-          La génération peut prendre de 1 à 5 minutes selon votre machine
-          (bien plus rapide avec un GPU ou un modèle plus léger).
+          La génération peut prendre de 1 à 5 minutes selon votre machine (bien plus rapide avec un
+          GPU ou un modèle plus léger).
         </p>
       </form>
     </div>

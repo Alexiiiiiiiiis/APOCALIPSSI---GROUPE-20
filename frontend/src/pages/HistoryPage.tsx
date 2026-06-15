@@ -10,7 +10,7 @@ export default function HistoryPage() {
   useEffect(() => {
     listQuizzes()
       .then((res) => setQuizzes(res.results))
-      .catch(() => setError('Impossible de charger l\'historique.'))
+      .catch(() => setError("Impossible de charger l'historique."))
       .finally(() => setLoading(false));
   }, []);
 

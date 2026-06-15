@@ -32,7 +32,10 @@ export default function OverviewTab() {
       <Stat label="Administrateurs" value={stats.users_staff} />
       <Stat label="Quiz créés" value={stats.quizzes_total} />
       <Stat label="Quiz passés" value={stats.quizzes_taken} />
-      <Stat label="Score moyen" value={stats.average_score !== null ? `${stats.average_score}/10` : '—'} />
+      <Stat
+        label="Score moyen"
+        value={stats.average_score !== null ? `${stats.average_score}/10` : '—'}
+      />
       <Stat label="Questions totales" value={stats.questions_total} />
     </div>
   );

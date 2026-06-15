@@ -1,7 +1,10 @@
 /** Onglet « Utilisateurs » de l'admin : liste, recherche et actions. */
 import { useEffect, useState } from 'react';
 import {
-  listAdminUsers, updateAdminUser, deleteAdminUser, resendUserVerification,
+  listAdminUsers,
+  updateAdminUser,
+  deleteAdminUser,
+  resendUserVerification,
   type AdminUser,
 } from '@/api/admin';
 import { getApiErrorMessage } from '@/api/errors';
@@ -108,7 +111,9 @@ export default function UsersTab() {
                       </span>
                     )}
                   </td>
-                  <td className="px-3 py-2">{[u.first_name, u.last_name].filter(Boolean).join(' ') || '—'}</td>
+                  <td className="px-3 py-2">
+                    {[u.first_name, u.last_name].filter(Boolean).join(' ') || '—'}
+                  </td>
                   <td className="px-3 py-2">{u.quiz_count}</td>
                   <td className="px-3 py-2">
                     {u.email_verified ? (
@@ -127,22 +132,30 @@ export default function UsersTab() {
                   <td className="px-3 py-2">{u.is_staff ? 'admin' : 'membre'}</td>
                   <td className="px-3 py-2">
                     <div className="flex flex-wrap gap-2 text-xs">
-                      <button onClick={() => patch(u, { is_active: !u.is_active })}
-                              className="text-indigo-600 hover:underline">
+                      <button
+                        onClick={() => patch(u, { is_active: !u.is_active })}
+                        className="text-indigo-600 hover:underline"
+                      >
                         {u.is_active ? 'Désactiver' : 'Activer'}
                       </button>
-                      <button onClick={() => patch(u, { is_staff: !u.is_staff })}
-                              className="text-indigo-600 hover:underline">
+                      <button
+                        onClick={() => patch(u, { is_staff: !u.is_staff })}
+                        className="text-indigo-600 hover:underline"
+                      >
                         {u.is_staff ? 'Retirer admin' : 'Rendre admin'}
                       </button>
                       {!u.email_verified && (
                         <>
-                          <button onClick={() => patch(u, { email_verified: true })}
-                                  className="text-indigo-600 hover:underline">
+                          <button
+                            onClick={() => patch(u, { email_verified: true })}
+                            className="text-indigo-600 hover:underline"
+                          >
                             Forcer vérif.
                           </button>
-                          <button onClick={() => resend(u)}
-                                  className="text-indigo-600 hover:underline">
+                          <button
+                            onClick={() => resend(u)}
+                            className="text-indigo-600 hover:underline"
+                          >
                             Renvoyer mail
                           </button>
                         </>

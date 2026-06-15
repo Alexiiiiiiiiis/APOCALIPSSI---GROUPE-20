@@ -38,9 +38,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <SiteConfigContext.Provider value={{ config, refresh }}>
-      {children}
-    </SiteConfigContext.Provider>
+    <SiteConfigContext.Provider value={{ config, refresh }}>{children}</SiteConfigContext.Provider>
   );
 }
 

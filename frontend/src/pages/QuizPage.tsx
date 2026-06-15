@@ -80,7 +80,7 @@ export default function QuizPage() {
               : result.score >= 7
                 ? '👍 Bon résultat. Revois les questions ratées en bas de page.'
                 : result.score >= 4
-                  ? '📚 Tu as les bases, mais des révisions s\'imposent.'
+                  ? "📚 Tu as les bases, mais des révisions s'imposent."
                   : '⚠️ Il faut reprendre le cours en profondeur.'}
           </p>
           <Link to="/history" className="btn-secondary mt-4 inline-flex">

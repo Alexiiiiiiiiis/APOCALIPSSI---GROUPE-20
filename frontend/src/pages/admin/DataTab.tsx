@@ -80,9 +80,8 @@ export default function DataTab() {
       <section className="card border-2 border-rose-200">
         <h2 className="text-lg font-semibold text-rose-700 mb-2">Réinitialiser la base ⚠️</h2>
         <p className="text-sm text-slate-600 mb-4">
-          Supprime <strong>tous les quiz</strong> (et leurs questions). Optionnellement,
-          supprime aussi tous les comptes non-administrateurs. <strong>Action
-          irréversible.</strong>
+          Supprime <strong>tous les quiz</strong> (et leurs questions). Optionnellement, supprime
+          aussi tous les comptes non-administrateurs. <strong>Action irréversible.</strong>
         </p>
         <form onSubmit={doReset} className="space-y-4">
           <label className="flex items-center gap-2 text-sm text-slate-700">

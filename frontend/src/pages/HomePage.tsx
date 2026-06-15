@@ -14,8 +14,8 @@ export default function HomePage() {
           </span>
         </h1>
         <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-          Upload ton cours, EduTutor te génère 10 questions QCM, te corrige et
-          identifie tes lacunes. Le tout sur ta machine, en open source.
+          Upload ton cours, EduTutor te génère 10 questions QCM, te corrige et identifie tes
+          lacunes. Le tout sur ta machine, en open source.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3 justify-center">
@@ -50,19 +50,22 @@ export default function HomePage() {
         <div className="card">
           <div className="text-2xl mb-2">🤖</div>
           <h3 className="font-semibold text-slate-900 mb-2">10 QCM générés</h3>
-          <p className="text-sm">Llama 3.1 8B via Ollama. Aucune API payante, aucune fuite de données.</p>
+          <p className="text-sm">
+            Llama 3.1 8B via Ollama. Aucune API payante, aucune fuite de données.
+          </p>
         </div>
         <div className="card">
           <div className="text-2xl mb-2">📈</div>
           <h3 className="font-semibold text-slate-900 mb-2">Mesure ta progression</h3>
-          <p className="text-sm">Historique des scores, lacunes identifiées (extension Release 2).</p>
+          <p className="text-sm">
+            Historique des scores, lacunes identifiées (extension Release 2).
+          </p>
         </div>
       </section>
 
       <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded text-sm">
-        <strong className="text-slate-900">Kit de démarrage APOCAL'IPSSI 2026.</strong>{' '}
-        Ce frontend est volontairement minimaliste — c'est à vous de l'enrichir
-        pendant la semaine. Consultez le{' '}
+        <strong className="text-slate-900">Kit de démarrage APOCAL'IPSSI 2026.</strong> Ce frontend
+        est volontairement minimaliste — c'est à vous de l'enrichir pendant la semaine. Consultez le{' '}
         <a
           href="https://github.com/melafrit/IPSSI_APOCAL_KIT"
           target="_blank"

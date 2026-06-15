@@ -68,7 +68,9 @@ export default function ReviewMistakesPage() {
           <p className="text-slate-600 mb-4">
             Vous n'avez aucune erreur à réviser. Passez un quiz pour vous entraîner !
           </p>
-          <Link to="/upload" className="btn-primary">Créer un quiz</Link>
+          <Link to="/upload" className="btn-primary">
+            Créer un quiz
+          </Link>
         </div>
       ) : (
         <div className="space-y-4">
@@ -78,10 +80,7 @@ export default function ReviewMistakesPage() {
                 <span className="font-mono text-xs text-slate-500">
                   Quiz #{m.quiz_id} · Question {m.index}
                 </span>
-                <Link
-                  to={`/quiz/${m.quiz_id}`}
-                  className="text-xs text-indigo-600 hover:underline"
-                >
+                <Link to={`/quiz/${m.quiz_id}`} className="text-xs text-indigo-600 hover:underline">
                   Refaire ce quiz →
                 </Link>
               </div>
@@ -96,9 +95,7 @@ export default function ReviewMistakesPage() {
                   />
                 ))}
               </div>
-              <p className="text-xs text-slate-400 mt-2">
-                Issue du quiz « {m.quiz_title} ».
-              </p>
+              <p className="text-xs text-slate-400 mt-2">Issue du quiz « {m.quiz_title} ».</p>
             </div>
           ))}
         </div>

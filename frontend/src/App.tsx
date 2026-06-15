@@ -30,80 +30,80 @@ export default function App() {
         <AuthProvider>
           <BrowserRouter>
             <Routes>
-          <Route element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="signup" element={<SignupPage />} />
-            <Route path="forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="reset-password" element={<ResetPasswordPage />} />
-            <Route path="verify-email" element={<VerifyEmailPage />} />
+              <Route element={<Layout />}>
+                <Route index element={<HomePage />} />
+                <Route path="login" element={<LoginPage />} />
+                <Route path="signup" element={<SignupPage />} />
+                <Route path="forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="reset-password" element={<ResetPasswordPage />} />
+                <Route path="verify-email" element={<VerifyEmailPage />} />
 
-            {/* Pages légales (publiques, à compléter par les étudiants) */}
-            <Route path="legal/mentions-legales" element={<MentionsLegalesPage />} />
-            <Route path="legal/confidentialite" element={<ConfidentialitePage />} />
-            <Route path="legal/cgu" element={<CGUPage />} />
-            <Route path="legal/cookies" element={<CookiesPage />} />
+                {/* Pages légales (publiques, à compléter par les étudiants) */}
+                <Route path="legal/mentions-legales" element={<MentionsLegalesPage />} />
+                <Route path="legal/confidentialite" element={<ConfidentialitePage />} />
+                <Route path="legal/cgu" element={<CGUPage />} />
+                <Route path="legal/cookies" element={<CookiesPage />} />
 
-            {/* Routes protégées */}
-            <Route
-              path="upload"
-              element={
-                <RequireAuth>
-                  <UploadPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="quiz/:id"
-              element={
-                <RequireAuth>
-                  <QuizPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="history"
-              element={
-                <RequireAuth>
-                  <HistoryPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="profile"
-              element={
-                <RequireAuth>
-                  <ProfilePage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="dashboard"
-              element={
-                <RequireAuth>
-                  <DashboardPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="review"
-              element={
-                <RequireAuth>
-                  <ReviewMistakesPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="admin"
-              element={
-                <RequireAdmin>
-                  <AdminPage />
-                </RequireAdmin>
-              }
-            />
+                {/* Routes protégées */}
+                <Route
+                  path="upload"
+                  element={
+                    <RequireAuth>
+                      <UploadPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="quiz/:id"
+                  element={
+                    <RequireAuth>
+                      <QuizPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="history"
+                  element={
+                    <RequireAuth>
+                      <HistoryPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="profile"
+                  element={
+                    <RequireAuth>
+                      <ProfilePage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="dashboard"
+                  element={
+                    <RequireAuth>
+                      <DashboardPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="review"
+                  element={
+                    <RequireAuth>
+                      <ReviewMistakesPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="admin"
+                  element={
+                    <RequireAdmin>
+                      <AdminPage />
+                    </RequireAdmin>
+                  }
+                />
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Route>
             </Routes>
           </BrowserRouter>
         </AuthProvider>
