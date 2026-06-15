@@ -34,7 +34,7 @@ def extract_text_from_pdf(file_obj) -> str:
 
     try:
         # pypdf accepte aussi des bytes — on enveloppe au besoin
-        if isinstance(file_obj, (bytes, bytearray)):
+        if isinstance(file_obj, bytes | bytearray):
             file_obj = io.BytesIO(file_obj)
         reader = pypdf.PdfReader(file_obj)
     except Exception as exc:
