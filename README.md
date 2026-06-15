@@ -67,6 +67,53 @@ open http://localhost:8000/api/docs  # Swagger UI
 
 ---
 
+## 🟢 Lancer l'application en une commande
+
+Plutôt que les 4 étapes manuelles ci-dessus, un **script de lancement par OS**
+fait tout d'un coup : crée le `.env` si besoin → **build** les images →
+**(re)lance** les conteneurs → attend que le backend réponde → applique les
+**migrations** → insère les **données de démo** → vérifie le **modèle LLM** (et
+**propose de le télécharger** s'il manque) → affiche les URLs. Lançable depuis
+n'importe où (le script se replace à la racine du projet).
+
+| Système | Commande |
+|---|---|
+| **Linux** | `bash scripts/start-linux.sh` |
+| **macOS** | `bash scripts/start-macos.sh` |
+| **Windows (PowerShell)** | `powershell -ExecutionPolicy Bypass -File scripts\start-windows.ps1` |
+
+### Options (cumulables)
+
+| Flag (Unix / Windows) | Effet |
+|---|---|
+| `--fast` / `-Fast` | Relance **sans reconstruire** les images (gain de plusieurs minutes). |
+| `--yes` / `-Yes` | **Non-interactif** : télécharge le modèle LLM s'il manque, sans demander. |
+| `--no-seed` / `-NoSeed` | Démarre **sans** insérer les données de démonstration. |
+| `--logs` / `-Logs` | Enchaîne sur `docker compose logs -f` après le démarrage. |
+| `--help` / `-Help` | Affiche l'aide. |
+
+Exemples :
+
+```bash
+# Linux / macOS — relance rapide sans données de démo
+bash scripts/start-linux.sh --fast --no-seed
+
+# Windows — non-interactif (pull modèle auto) + suivi des logs
+powershell -ExecutionPolicy Bypass -File scripts\start-windows.ps1 -Yes -Logs
+```
+
+> 💡 Le **modèle LLM** (~4,7 Go) n'est téléchargé qu'une fois : au 1er lancement
+> le script détecte son absence et **vous demande** s'il faut le télécharger
+> (sauf en `--yes`/`-Yes`, où il le fait automatiquement). C'est l'étape la plus
+> longue.
+>
+> - Pour les **gestes ponctuels** (arrêter, voir les logs, réinitialiser la DB),
+>   préférez le **Makefile** (section *Commandes utiles* ci-dessous).
+> - Pour seulement **redéployer** après une modif de code/`.env`, voir la section
+>   *Redéployer après une modification*.
+
+---
+
 ## 📚 Documentation détaillée
 
 👉 **Démarrage guidé pour les étudiants : [GUIDE-ETUDIANT.md](./GUIDE-ETUDIANT.md)**
@@ -86,6 +133,7 @@ Le dossier [`docs/`](./docs) contient 11 fiches thématiques :
 | [08-mvp2-idees.md](./docs/08-mvp2-idees.md) | Catalogue d'idées MVP2 + méthode de priorisation |
 | [09-admin.md](./docs/09-admin.md) | Interface d'admin : config LLM/app, utilisateurs, données |
 | [10-gestion-projet-github.md](./docs/10-gestion-projet-github.md) | Workflow Git/PR, issues, board GitHub Projects, commits |
+| [11-deploiement-vps-ovh.md](./docs/11-deploiement-vps-ovh.md) | Déploiement **production** sur VPS OVH : durcissement, Docker, override prod, Caddy/HTTPS, LLM cloud, sauvegardes |
 
 ---
 

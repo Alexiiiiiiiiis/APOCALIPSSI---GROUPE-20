@@ -22,6 +22,20 @@ SECRET_KEY = config(
 DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", default="*", cast=Csv())
 
+# Drapeau de production. Activé via docker-compose.prod.yml (DJANGO_SECURE_PROD=
+# True). Il pilote le durcissement HTTPS/cookies (plus bas) et le stockage des
+# fichiers statiques à manifeste, INDÉPENDAMMENT de DEBUG : la CI tourne avec
+# DEBUG=False sans être en prod, on ne veut donc pas lier ce durcissement à DEBUG.
+SECURE_PROD = config("DJANGO_SECURE_PROD", default=False, cast=bool)
+
+# Origines de confiance CSRF (POST de l'admin Django / Swagger derrière HTTPS).
+# DOIT comporter le schéma, ex. https://apocalipssi26.elafrit.com
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
+
+# Derrière le reverse proxy Caddy (terminaison TLS), Django reconnaît l'HTTPS
+# d'origine via l'en-tête X-Forwarded-Proto qu'ajoute Caddy.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # ----------------------------------------------------------------------------
 # Applications
 # ----------------------------------------------------------------------------
@@ -55,6 +69,16 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# WhiteNoise (service des fichiers statiques) n'est activé qu'en PRODUCTION,
+# inséré juste après SecurityMiddleware (ordre recommandé). En dev/CI on s'en
+# passe (runserver sert les statiques), ce qui évite d'imposer la dépendance
+# whitenoise au conteneur de développement.
+if SECURE_PROD:
+    MIDDLEWARE.insert(
+        MIDDLEWARE.index("django.middleware.security.SecurityMiddleware") + 1,
+        "whitenoise.middleware.WhiteNoiseMiddleware",
+    )
 
 ROOT_URLCONF = "apocal.urls"
 WSGI_APPLICATION = "apocal.wsgi.application"
@@ -116,6 +140,17 @@ USE_TZ = True
 # ----------------------------------------------------------------------------
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# En production (SECURE_PROD), WhiteNoise sert des statiques compressés avec un
+# manifeste à hash (cache long + invalidation auto). `collectstatic` est lancé
+# au démarrage du conteneur backend prod. En dev/CI, on garde le stockage standard.
+if SECURE_PROD:
+    STORAGES = {
+        "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -267,3 +302,23 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="EduTutor IA <no-reply
 # URL publique du frontend, utilisée pour construire les liens cliquables dans
 # les emails (validation de compte, réinitialisation de mot de passe — Lot 3).
 FRONTEND_URL = config("FRONTEND_URL", default="http://localhost:3000")
+
+# ----------------------------------------------------------------------------
+# Durcissement production (actif uniquement si DJANGO_SECURE_PROD=True)
+# ----------------------------------------------------------------------------
+# Réglages de sécurité activés derrière HTTPS (Caddy). Volontairement NON liés à
+# DEBUG : la CI tourne avec DEBUG=False sans être « en prod ».
+if SECURE_PROD:
+    SECURE_SSL_REDIRECT = True  # redirige tout HTTP vers HTTPS
+    # Le healthcheck interne du conteneur frappe http://127.0.0.1:8000/health/
+    # (sans passer par Caddy) : on l'exempte du redirect HTTPS, sinon il reçoit
+    # une 301 au lieu d'un 200 et le conteneur est marqué "unhealthy".
+    SECURE_REDIRECT_EXEMPT = [r"^health/$"]
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 an
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = "DENY"

@@ -24,3 +24,7 @@ requests==2.32.3
 
 # Sécurité
 cryptography==44.0.0
+
+# Serveur WSGI de production + service des fichiers statiques
+gunicorn==23.0.0
+whitenoise==6.8.2
