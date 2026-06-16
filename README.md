@@ -16,6 +16,17 @@ de LLM open source.
 > 🎓 **Nouveau sur le projet ? Commencez par le [Guide étudiant](./GUIDE-ETUDIANT.md)** —
 > de l'installation à votre première fonctionnalité, pas à pas.
 
+> ### Les 5 perturbations de la semaine
+> La semaine compte **exactement 5 perturbations** (dont **2 le mercredi**) :
+>
+> | # | Jour | Créneau | Thème |
+> |---|------|---------|-------|
+> | P1 | J1 | lundi 14h00 | Produit / Scope |
+> | P2 | J2 | mardi 10h00 | Technique (latence → ADR) |
+> | P3 | J3 | mercredi 10h00 | Sécurité (prompt injection) |
+> | P4 | J3-bis | mercredi 14h00 | RGPD / données personnelles |
+> | P5 | J4 | jeudi 10h00 | Livraison / Crise |
+
 ### ✨ Déjà inclus
 
 - **Comptes** : inscription / connexion **par email**, validation d'email, mot de

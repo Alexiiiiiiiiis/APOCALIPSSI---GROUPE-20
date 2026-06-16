@@ -74,7 +74,8 @@ Le projet est conduit selon le cadre **Scrum**, sur une semaine immersive. L'éq
 |---|---|---|
 | J1 (lundi) | Cadrage, conception, Sprint Planning | Backlog priorisé, architecture, artefacts de cadrage |
 | J2 (mardi) | Réalisation — socle | Auth (F1), saisie de cours (F2), squelette d'intégration LLM |
-| J3 (mercredi) | Réalisation — cœur | Génération 10 QCM (F3), correction (F4), score (F5) |
+| J3 (mercredi 10h00) | Réalisation — cœur | Génération 10 QCM (F3), correction (F4), score (F5) |
+| J3-bis (mercredi 14h00) | Réalisation — cœur (double créneau) | RGPD / données personnelles (demande d'accès, souveraineté) |
 | J4 (jeudi) | Réalisation — finalisation | Historique (F6), polissage, gestion des perturbations |
 | J5 (vendredi) | Recette et soutenance | Démonstration, rétrospective, restitution |
 

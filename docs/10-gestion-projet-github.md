@@ -33,7 +33,7 @@ Le kit fournit des **modèles d'issues** (onglet *Issues → New issue*) :
 |---|---|
 | 📝 **User story** | Besoin au format INVEST + critères d'acceptation + DoR/DoD |
 | 🐛 **Bug** | Dysfonctionnement reproductible |
-| 🌀 **Tâche perturbation** | Tracer une décision/livrable lié à une perturbation (J1…J4) |
+| 🌀 **Tâche perturbation** | Tracer une décision/livrable lié à une perturbation (J1, J2, J3, J3-bis, J4 — 5 perturbations) |
 
 Et un **modèle de Pull Request** (checklist Definition of Done).
 

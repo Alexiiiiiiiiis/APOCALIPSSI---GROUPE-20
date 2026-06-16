@@ -7,6 +7,17 @@ lisez-le dans l'ordre la première fois, puis revenez-y comme référence.
 > 🧭 **Vous êtes pressé ?** Allez direct à [§2 Installation](#2-installation-pas-à-pas).
 > **Vous voulez coder une feature ?** Voir [§5 Ajouter une fonctionnalité](#5-ajouter-une-fonctionnalité-le-workflow-type).
 
+> ### Les 5 perturbations de la semaine
+> La semaine compte **exactement 5 perturbations** (dont **2 le mercredi**) :
+>
+> | # | Jour | Créneau | Thème |
+> |---|------|---------|-------|
+> | P1 | J1 | lundi 14h00 | Produit / Scope |
+> | P2 | J2 | mardi 10h00 | Technique (latence → ADR) |
+> | P3 | J3 | mercredi 10h00 | Sécurité (prompt injection) |
+> | P4 | J3-bis | mercredi 14h00 | RGPD / données personnelles |
+> | P5 | J4 | jeudi 10h00 | Livraison / Crise |
+
 ---
 
 ## 1. C'est quoi, ce kit ?

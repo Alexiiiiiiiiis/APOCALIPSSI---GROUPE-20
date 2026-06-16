@@ -1,6 +1,6 @@
 ---
 name: "🌀 Tâche perturbation"
-about: "Tracer une tâche liée à une perturbation (J1…J4)"
+about: "Tracer une tâche liée à une perturbation (J1, J2, J3, J3-bis, J4 — 5 perturbations)"
 title: "[PERTURBATION Jx] …"
 labels: ["perturbation"]
 ---
