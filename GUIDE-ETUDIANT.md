@@ -308,7 +308,7 @@ Requests**, faites-vous **relire**. Voir `docs/05-ci-cd.md` et `docs/07-bonnes-p
 | Idées pour la Release 2 | `docs/08-mvp2-idees.md` |
 | Interface d'administration | `docs/09-admin.md` |
 | Cours Agile/Scrum | <https://mohamedelafrit.com/teaching/Master_Classe_Agile/cours.html> |
-| Infos de la semaine | <https://apocal.mohamedelafrit.com> |
+| Infos de la semaine | <https://apocalipssi26.elafrit.com> |
 
 ---
 

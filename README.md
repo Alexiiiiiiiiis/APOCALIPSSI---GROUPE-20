@@ -265,7 +265,7 @@ Cours Agile/Scrum complet utilisé tout au long de la semaine :
 ## 🌐 Site pédagogique APOCAL'IPSSI
 
 Toutes les informations sur la semaine (déroulement, perturbations, modèles,
-FAQ) : **[apocal.mohamedelafrit.com](https://apocal.mohamedelafrit.com)**
+FAQ) : **[apocalipssi26.elafrit.com](https://apocalipssi26.elafrit.com)**
 
 ---
 

@@ -3,7 +3,7 @@
 > 🎯 Pendant APOCAL'IPSSI, **tout passe par GitHub** : code, documents ET suivi de
 > projet. Pas de GitLab ni d'autre outil de versioning. Teams sert uniquement à la
 > communication / visio. Le dépôt est **public** et **noté** (contenu *et* fréquence
-> des commits **par membre**) — voir la [grille d'évaluation](https://apocal.mohamedelafrit.com/pages/evaluation.php).
+> des commits **par membre**) — voir la [grille d'évaluation](https://apocalipssi26.elafrit.com/pages/evaluation.php).
 
 ## 1. Le dépôt
 
