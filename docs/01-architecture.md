@@ -129,7 +129,44 @@ sequenceDiagram
 
 ---
 
-## 🎯 Périmètre 30 % MVP
+## 🔍 Lire le code hérité en 20 min (avant d'ajouter quoi que ce soit)
+
+Le projet est **repris (brownfield)**. Avant de coder, **lisez les 2 flux cœur** en suivant
+le chemin **fichier par fichier**. C'est l'exercice qui nourrit votre inventaire et votre
+repriorisation MoSCoW avec le PO — et qui met Bachelor B3 et Master M1 à égalité.
+
+### Flux A — Connexion par email (~10 min)
+
+1. `frontend/src/pages/LoginPage.tsx` — le formulaire (point d'entrée UI).
+2. `frontend/src/api/auth.ts` → `login(email, password)` — l'appel API.
+3. `frontend/src/api/client.ts` — l'instance axios (base URL + token + gestion 401).
+4. `backend/apocal/urls.py` → `path("api/accounts/", include("accounts.urls"))`.
+5. `backend/accounts/urls.py` → `path("login/", LoginView.as_view())`.
+6. `backend/accounts/views.py` → `LoginView.post()` — orchestre la connexion.
+7. `backend/accounts/serializers.py` → `LoginSerializer` — **trouve l'utilisateur par EMAIL** puis authentifie (subtilité clé du kit : le login se fait par email, pas par username).
+8. `backend/accounts/models.py` — `User` + `Profile` (`email_verified`…).
+
+Le token renvoyé est stocké par `frontend/src/contexts/AuthContext.tsx` (puis renvoyé à chaque requête).
+
+### Flux B — Génération d'un quiz (~10 min)
+
+1. `frontend/src/pages/UploadPage.tsx` — upload PDF/texte + titre.
+2. `frontend/src/api/llm.ts` → `generateQuiz(input)` — POST multipart.
+3. `backend/apocal/urls.py` → `path("api/llm/", include("llm.urls"))`.
+4. `backend/llm/urls.py` → `path("generate-quiz/", GenerateQuizView.as_view())`.
+5. `backend/llm/views.py` → `GenerateQuizView.post()` — extrait le texte du PDF, appelle le LLM, **valide le JSON** (10 questions × 4 options).
+6. `backend/llm/providers.py` — abstraction des fournisseurs LLM (Ollama / cloud / mock).
+7. `backend/quizzes/models.py` — `Quiz` + `Question` insérés en transaction.
+
+La réponse renvoie vers `frontend/src/pages/QuizPage.tsx` (via `frontend/src/api/quizzes.ts`).
+
+> 💡 **Astuce inventaire** : pour chaque flux, notez ce qui est **solide** (à garder),
+> **fragile** (à fiabiliser) et **manquant** (à ajouter). C'est votre matière pour la
+> repriorisation **MoSCoW** avec le PO — et pour la **carte rétro** de chaque perturbation.
+
+---
+
+## 🎯 Où en est la base (✅ déjà là / 🔧 à recalibrer)
 
 Ce qui est **déjà câblé** dans le kit :
 

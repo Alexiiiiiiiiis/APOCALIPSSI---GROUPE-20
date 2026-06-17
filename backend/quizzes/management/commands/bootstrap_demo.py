@@ -27,6 +27,10 @@ from accounts.models import get_or_create_profile
 from quizzes.models import Question, Quiz
 
 QUIZ_DATA_FILE = Path(__file__).resolve().parent / "demo_quizzes.json"
+# Comptes étudiants/enseignante SCÉNARISÉS (Léa en révision, Kevin qui bloque en
+# maths → score faible alimentant Dashboard/Révision, Mme Lefèvre + quiz « hallucinant »
+# préfigurant J3). Une part du récit portée par la donnée, pas seulement l'animation.
+STUDENT_DATA_FILE = Path(__file__).resolve().parent / "demo_students.json"
 
 DEFAULT_ACCOUNTS = [
     {
@@ -66,8 +70,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for acc in DEFAULT_ACCOUNTS:
             user = self._ensure_account(acc)
-            if acc["with_quizzes"]:
+            if acc.get("with_quizzes"):
                 self._ensure_quizzes(user)
+        self._ensure_scenario_students()
         self.stdout.write(self.style.SUCCESS("bootstrap_demo : terminé."))
 
     def _ensure_account(self, acc):
@@ -77,10 +82,10 @@ class Command(BaseCommand):
             username=acc["email"],
             defaults={
                 "email": acc["email"],
-                "first_name": acc["first_name"],
-                "last_name": acc["last_name"],
-                "is_staff": acc["is_staff"],
-                "is_superuser": acc["is_superuser"],
+                "first_name": acc.get("first_name", ""),
+                "last_name": acc.get("last_name", ""),
+                "is_staff": acc.get("is_staff", False),
+                "is_superuser": acc.get("is_superuser", False),
             },
         )
         if created:
@@ -119,3 +124,43 @@ class Command(BaseCommand):
                 )
             count = len(qz["questions"])
             self.stdout.write(self.style.SUCCESS(f"  + quiz créé : {qz['title']} ({count} Q)"))
+
+    def _ensure_scenario_students(self):
+        """Crée les comptes étudiants/enseignante scénarisés + leurs quiz (avec
+        score et réponses ratées), pour que la donnée porte une part du récit
+        (Dashboard, Révision des erreurs, préfiguration J3). Idempotent."""
+        if not STUDENT_DATA_FILE.exists():
+            self.stdout.write(
+                self.style.WARNING(f"  ! fichier étudiants absent : {STUDENT_DATA_FILE}")
+            )
+            return
+        students = json.loads(STUDENT_DATA_FILE.read_text(encoding="utf-8"))
+        for st in students:
+            user = self._ensure_account(st)
+            self._ensure_scenario_quizzes(user, st.get("quizzes", []))
+
+    def _ensure_scenario_quizzes(self, user, quizzes):
+        """Quiz scénarisés : score (/10) et selected_index (réponse donnée) pris
+        en compte, sans doublon (on n'écrase pas un quiz existant)."""
+        for qz in quizzes:
+            quiz, created = Quiz.objects.get_or_create(
+                user=user,
+                title=qz["title"],
+                defaults={"source_text": qz.get("source_text", ""), "score": qz.get("score")},
+            )
+            if not created:
+                continue
+            for i, question in enumerate(qz["questions"], start=1):
+                Question.objects.create(
+                    quiz=quiz,
+                    index=i,
+                    prompt=question["prompt"],
+                    options=question["options"],
+                    correct_index=question["correct_index"],
+                    selected_index=question.get("selected_index"),
+                )
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"  + quiz scénarisé : {qz['title']} ({len(qz['questions'])} Q, score={qz.get('score')})"
+                )
+            )
