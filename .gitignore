@@ -46,6 +46,9 @@ venv/
 env/
 ENV/
 
+# --- Playwright MCP artifacts ---
+.playwright-mcp/
+
 # --- Django ---
 *.log
 local_settings.py
