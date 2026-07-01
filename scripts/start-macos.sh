@@ -87,7 +87,10 @@ else
 fi
 
 # Lecture du modele Ollama defini dans .env (fallback : llama3.1:8b).
-MODEL="$(sed -n 's/^[[:space:]]*OLLAMA_MODEL[[:space:]]*=[[:space:]]*//p' .env | head -n1)"
+MODEL="$(sed -n 's/^[[:space:]]*ACTIVE_LLM_MODEL[[:space:]]*=[[:space:]]*//p' .env | head -n1)"
+if [ -z "$MODEL" ]; then
+  MODEL="$(sed -n 's/^[[:space:]]*OLLAMA_MODEL[[:space:]]*=[[:space:]]*//p' .env | head -n1)"
+fi
 MODEL="${MODEL:-$DEFAULT_MODEL}"
 
 # ---------- 2. Build ----------

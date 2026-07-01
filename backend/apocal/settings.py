@@ -227,7 +227,8 @@ LLM_BACKEND = config("LLM_BACKEND", default="ollama")
 
 # --- Ollama (local, gratuit) ---
 OLLAMA_HOST = config("OLLAMA_HOST", default="http://ollama:11434")
-OLLAMA_MODEL = config("OLLAMA_MODEL", default="llama3.1:8b")
+ACTIVE_LLM_MODEL = config("ACTIVE_LLM_MODEL", default="llama3.1:8b")
+OLLAMA_MODEL = ACTIVE_LLM_MODEL
 # Délai max (secondes) d'attente d'une génération Ollama. Sur CPU, un modèle 8B
 # met facilement 2 à 5 minutes pour 10 QCM : 120 s était trop court (timeout ->
 # 502). Défaut généreux, ajustable via .env (OLLAMA_TIMEOUT).

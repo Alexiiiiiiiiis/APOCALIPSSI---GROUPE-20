@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-MODEL="${OLLAMA_MODEL:-llama3.1:8b}"
+MODEL="${ACTIVE_LLM_MODEL:-${OLLAMA_MODEL:-llama3.1:8b}}"
 CONTAINER="${OLLAMA_CONTAINER:-apocalipssi-2026-ollama}"
 
 if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then

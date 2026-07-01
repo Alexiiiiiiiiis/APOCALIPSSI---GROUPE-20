@@ -88,10 +88,14 @@ if (-not (Test-Path ".env")) {
 
 # Lecture du modele Ollama defini dans .env (fallback : llama3.1:8b).
 $Model = $DefaultModel
-$envLine = Select-String -Path ".env" -Pattern '^\s*OLLAMA_MODEL\s*=' -ErrorAction SilentlyContinue |
+$envLine = Select-String -Path ".env" -Pattern '^\s*ACTIVE_LLM_MODEL\s*=' -ErrorAction SilentlyContinue |
            Select-Object -First 1
+if (-not $envLine) {
+    $envLine = Select-String -Path ".env" -Pattern '^\s*OLLAMA_MODEL\s*=' -ErrorAction SilentlyContinue |
+               Select-Object -First 1
+}
 if ($envLine) {
-    $val = ($envLine.Line -replace '^\s*OLLAMA_MODEL\s*=\s*', '').Trim()
+    $val = ($envLine.Line -replace '^\s*(ACTIVE_LLM_MODEL|OLLAMA_MODEL)\s*=\s*', '').Trim()
     if ($val) { $Model = $val }
 }
 
