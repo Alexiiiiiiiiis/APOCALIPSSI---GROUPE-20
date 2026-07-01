@@ -100,7 +100,7 @@ Vous tournez sur CPU sans GPU. Solutions :
 Inspecter ce que renvoie Ollama directement :
 
 ```bash
-docker exec -it apocalipssi-2026-ollama ollama run llama3.1:8b "Génère 1 QCM en JSON sur les bases du HTTP"
+docker exec -it apocalipssi-2026-ollama ollama run llama3.2:3b "Génère 1 QCM en JSON sur les bases du HTTP"
 ```
 
 Si la qualité est mauvaise même en interactif :

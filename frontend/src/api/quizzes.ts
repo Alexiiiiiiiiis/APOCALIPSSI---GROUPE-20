@@ -4,7 +4,7 @@ export type Question = {
   index: number;
   prompt: string;
   options: string[];
-  correct_index: number;
+  correct_index?: number;
 };
 
 export type Quiz = {

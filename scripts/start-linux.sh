@@ -28,7 +28,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 OLLAMA_CONTAINER="apocalipssi-2026-ollama"
-DEFAULT_MODEL="llama3.1:8b"
+DEFAULT_MODEL="llama3.2:3b"
 
 # ---------- Options ----------
 FAST=0
@@ -84,11 +84,8 @@ else
   echo "==> .env present : conserve tel quel."
 fi
 
-# Lecture du modele Ollama defini dans .env (fallback : llama3.1:8b).
-MODEL="$(sed -n 's/^[[:space:]]*ACTIVE_LLM_MODEL[[:space:]]*=[[:space:]]*//p' .env | head -n1)"
-if [ -z "$MODEL" ]; then
-  MODEL="$(sed -n 's/^[[:space:]]*OLLAMA_MODEL[[:space:]]*=[[:space:]]*//p' .env | head -n1)"
-fi
+# Lecture du modele Ollama defini dans .env (fallback : llama3.2:3b).
+MODEL="$(sed -n 's/^[[:space:]]*OLLAMA_MODEL[[:space:]]*=[[:space:]]*//p' .env | head -n1)"
 MODEL="${MODEL:-$DEFAULT_MODEL}"
 
 # ---------- 2. Build ----------

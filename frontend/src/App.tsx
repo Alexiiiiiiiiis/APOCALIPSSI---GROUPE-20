@@ -20,6 +20,7 @@ import ReviewMistakesPage from '@/pages/ReviewMistakesPage';
 import AdminPage from '@/pages/admin/AdminPage';
 import MentionsLegalesPage from '@/pages/legal/MentionsLegalesPage';
 import ConfidentialitePage from '@/pages/legal/ConfidentialitePage';
+import RetentionPage from '@/pages/legal/RetentionPage';
 import CGUPage from '@/pages/legal/CGUPage';
 import CookiesPage from '@/pages/legal/CookiesPage';
 
@@ -41,6 +42,7 @@ export default function App() {
                 {/* Pages légales (publiques, à compléter par les étudiants) */}
                 <Route path="legal/mentions-legales" element={<MentionsLegalesPage />} />
                 <Route path="legal/confidentialite" element={<ConfidentialitePage />} />
+                <Route path="legal/retention" element={<RetentionPage />} />
                 <Route path="legal/cgu" element={<CGUPage />} />
                 <Route path="legal/cookies" element={<CookiesPage />} />
 

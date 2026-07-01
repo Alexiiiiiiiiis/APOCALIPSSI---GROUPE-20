@@ -113,6 +113,9 @@ export default function Layout() {
             <Link to="/legal/confidentialite" className="hover:text-indigo-600">
               Confidentialité
             </Link>
+            <Link to="/legal/retention" className="hover:text-indigo-600">
+              Politique de rétention
+            </Link>
             <Link to="/legal/cgu" className="hover:text-indigo-600">
               CGU
             </Link>

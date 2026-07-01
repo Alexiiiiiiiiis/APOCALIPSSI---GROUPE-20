@@ -37,9 +37,9 @@ PROVIDERS: dict[str, Provider] = {
         cloud=False,
         paid=False,
         needs_key=False,
-        settings_model_attr="ACTIVE_LLM_MODEL",
+        settings_model_attr="OLLAMA_MODEL",
         settings_key_attr="",
-        default_model="llama3.1:8b",
+        default_model="llama3.2:3b",
         help="Modèle open-source exécuté EN LOCAL (gratuit, souverain, hors-ligne). "
         "Téléchargez-le une fois avec `make pull-model`. Aucune clé requise. "
         "Lent sur CPU (cf. perturbation J2).",

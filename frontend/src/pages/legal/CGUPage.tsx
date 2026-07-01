@@ -1,39 +1,59 @@
-/** Conditions Générales d'Utilisation (modèle vierge à compléter). */
 import LegalScaffold, { type LegalSection } from './LegalScaffold';
 
 const SECTIONS: LegalSection[] = [
-  { title: 'Objet', hint: 'ce que régissent ces CGU et le service concerné (EduTutor IA).' },
   {
-    title: 'Acceptation des conditions',
-    hint: "comment l'utilisateur accepte les CGU (inscription, usage…).",
+    title: 'Objet du service',
+    content: (
+      <p className="text-sm text-slate-600">
+        EduTutor IA permet à un utilisateur authentifié d&apos;importer un cours, de générer un
+        quiz de révision, de répondre aux questions et de suivre ses résultats.
+      </p>
+    ),
   },
-  { title: 'Accès au service', hint: "conditions d'accès, disponibilité, prérequis techniques." },
   {
     title: 'Compte utilisateur',
-    hint: 'création, responsabilité du mot de passe, exactitude des informations.',
+    content: (
+      <p className="text-sm text-slate-600">
+        L&apos;email sert d&apos;identifiant. L&apos;utilisateur doit fournir des informations exactes,
+        conserver son mot de passe confidentiel et signaler tout usage non autorisé.
+      </p>
+    ),
   },
   {
     title: 'Comportements interdits',
-    hint: 'usages abusifs, contenus illicites, atteinte à la sécurité.',
+    content: (
+      <p className="text-sm text-slate-600">
+        Sont interdits : tentative d&apos;accès au compte d&apos;autrui, injection de prompt,
+        contournement de sécurité, dépôt de contenus illicites ou extraction massive de données.
+      </p>
+    ),
   },
   {
     title: 'Contenu généré par IA',
-    hint: "limites des quiz générés (peuvent contenir des erreurs), responsabilité de l'utilisateur.",
+    content: (
+      <p className="text-sm text-slate-600">
+        Les quiz sont générés automatiquement à partir du cours fourni. Ils peuvent contenir des
+        erreurs et doivent être vérifiés avant tout usage académique ou professionnel.
+      </p>
+    ),
   },
-  { title: 'Responsabilité', hint: "limites de responsabilité de l'éditeur." },
   {
-    title: 'Propriété intellectuelle',
-    hint: "droits sur le service et sur les contenus déposés par l'utilisateur.",
+    title: 'Responsabilité',
+    content: (
+      <p className="text-sm text-slate-600">
+        EduTutor IA est un projet pédagogique fourni sans garantie de disponibilité permanente.
+        L&apos;équipe n&apos;est pas responsable d&apos;un usage abusif ou d&apos;une mauvaise interprétation des
+        résultats générés.
+      </p>
+    ),
   },
-  { title: 'Modification des CGU', hint: 'comment et quand les CGU peuvent évoluer.' },
-  { title: 'Droit applicable et litiges', hint: 'droit applicable et juridiction compétente.' },
 ];
 
 export default function CGUPage() {
   return (
     <LegalScaffold
       title="Conditions Générales d'Utilisation"
-      intro="Les règles d'utilisation du service EduTutor IA, acceptées par chaque utilisateur."
+      intro="Les règles d'utilisation du service EduTutor IA."
       sections={SECTIONS}
     />
   );

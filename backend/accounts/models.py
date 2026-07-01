@@ -42,3 +42,43 @@ def get_or_create_profile(user) -> Profile:
     """
     profile, _ = Profile.objects.get_or_create(user=user)
     return profile
+
+
+class DataRequest(models.Model):
+    """Audit trail SAR RGPD (Subject Access Request).
+
+    Patch J3-bis : chaque export de données personnelles crée une trace
+    persistée afin de prouver qui a demandé l'export, quand, dans quel format,
+    avec quel hash de fichier.
+    """
+
+    class Status(models.TextChoices):
+        RECEIVED = "received", "Reçue"
+        PROCESSING = "processing", "En cours"
+        RESPONDED = "responded", "Répondue"
+        FAILED = "failed", "Échec"
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="data_requests",
+        help_text="Utilisateur ayant demandé l'accès à ses données.",
+    )
+    requested_at = models.DateTimeField(auto_now_add=True)
+    responded_at = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.RECEIVED
+    )
+    export_format = models.CharField(max_length=10, default="json")
+    file_hash = models.CharField(max_length=64, blank=True)
+    scope = models.JSONField(default=list, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["-requested_at"]
+        verbose_name = "Demande RGPD"
+        verbose_name_plural = "Demandes RGPD"
+
+    def __str__(self) -> str:
+        return f"SAR<{self.user.email or self.user.username}> {self.status}"
