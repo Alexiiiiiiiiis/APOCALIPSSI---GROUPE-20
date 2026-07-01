@@ -12,8 +12,11 @@ import requests
 # pyrefly: ignore [missing-import]
 from django.conf import settings
 
+import logging
 from .base import LLMClient, LLMError
-from .quiz_prompt import build_full_prompt, parse_and_validate_quiz
+from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, parse_and_validate_quiz
+
+logger = logging.getLogger(__name__)
 
 
 class OllamaLLMClient(LLMClient):
@@ -30,21 +33,30 @@ class OllamaLLMClient(LLMClient):
         self.timeout = timeout or settings.OLLAMA_TIMEOUT
 
     def generate_quiz(self, source_text: str, title: str) -> list[dict]:
-        # Ollama /api/generate attend UN prompt unique (pas de séparation
-        # system/user) : on concatène donc system + cours via build_full_prompt.
-        prompt = build_full_prompt(source_text, title)
-        raw = self._call_ollama(prompt)
-        return parse_and_validate_quiz(raw)
+        user_prompt = build_user_prompt(source_text, title)
+        
+        # Mécanisme de re-prompt (max 2 essais) en cas de faille de validation
+        for attempt in range(2):
+            try:
+                raw = self._call_ollama(SYSTEM_PROMPT, user_prompt)
+                return parse_and_validate_quiz(raw)
+            except LLMError as e:
+                logger.warning(f"Ollama validation LLMError (essai {attempt+1}/2) : {e}")
+                if attempt == 1:
+                    raise  # Si c'est le 2ème échec, on abandonne
+        
+        raise LLMError("Impossible de générer un quiz valide après 2 tentatives.")
 
     # ----- internals -----
 
-    def _call_ollama(self, prompt: str) -> str:
+    def _call_ollama(self, system_prompt: str, user_prompt: str) -> str:
         try:
             response = requests.post(
                 f"{self.host}/api/generate",
                 json={
                     "model": self.model,
-                    "prompt": prompt,
+                    "system": system_prompt,
+                    "prompt": user_prompt,
                     "stream": False,
                     "options": {"temperature": 0.4},  # peu de créativité : on veut du factuel
                     "format": "json",  # mode JSON strict d'Ollama si supporté
