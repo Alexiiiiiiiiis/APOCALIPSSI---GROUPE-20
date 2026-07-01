@@ -21,9 +21,9 @@ class QuestionPublicSerializer(serializers.ModelSerializer):
 
 
 class QuizSerializer(serializers.ModelSerializer):
-    """Renvoie un quiz complet avec ses 10 questions (incluant correct_index)."""
+    """Renvoie un quiz complet sans exposer la bonne réponse avant soumission."""
 
-    questions = QuestionSerializer(many=True, read_only=True)
+    questions = QuestionPublicSerializer(many=True, read_only=True)
 
     class Meta:
         model = Quiz

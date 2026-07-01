@@ -126,3 +126,28 @@ export async function deleteAccount(password: string): Promise<void> {
   await api.delete('/accounts/profile/', { data: { password } });
   clearToken();
 }
+
+
+/** Télécharge l'export RGPD du compte courant au format JSON ou CSV. */
+export async function exportMyData(format: 'json' | 'csv' = 'json'): Promise<void> {
+  const response = await api.get<Blob>('/accounts/me/export/', {
+    params: { format },
+    responseType: 'blob',
+  });
+
+  const disposition = response.headers['content-disposition'] ?? '';
+  const match = /filename="?([^";]+)"?/i.exec(disposition);
+  const filename = match?.[1] ?? `edututor-export.${format}`;
+
+  const blob = new Blob([response.data], {
+    type: format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json;charset=utf-8',
+  });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}

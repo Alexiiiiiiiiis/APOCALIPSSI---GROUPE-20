@@ -11,11 +11,18 @@ Endpoints d'authentification (Lot 3 : email-identifiant + validation + reset).
     POST /api/accounts/password-reset/confirm/   — définir le nouveau mot de passe
 """
 
+import csv
+import hashlib
+import io
+import json
 import logging
 
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.models import User
+from django.core.serializers.json import DjangoJSONEncoder
+from django.http import HttpResponse
+from django.utils import timezone
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -24,7 +31,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .emails import EmailError, send_password_reset_email, send_verification_email
-from .models import get_or_create_profile
+from .models import DataRequest, get_or_create_profile
 from .serializers import (
     ChangePasswordSerializer,
     DeleteAccountSerializer,
@@ -39,6 +46,161 @@ from .serializers import (
 from .tokens import read_email_verify_token, read_password_reset_tokens
 
 logger = logging.getLogger(__name__)
+
+
+SAR_SCOPE = [
+    "account",
+    "uploaded_courses",
+    "generated_quizzes",
+    "quiz_answers_and_scores",
+    "reports",
+    "audit_logs",
+]
+
+
+def _client_ip(request) -> str | None:
+    forwarded = request.META.get("HTTP_X_FORWARDED_FOR")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.META.get("REMOTE_ADDR")
+
+
+def _build_user_export(user, include_audit: bool = True) -> dict:
+    """Construit l'export Art. 15 strictement filtré sur l'utilisateur courant."""
+    from quizzes.models import Quiz
+
+    profile = get_or_create_profile(user)
+    quizzes = Quiz.objects.filter(user=user).prefetch_related("questions").order_by("created_at")
+
+    quiz_payload = []
+    answers_payload = []
+    for quiz in quizzes:
+        questions = []
+        for question in quiz.questions.all():
+            q_payload = {
+                "index": question.index,
+                "prompt": question.prompt,
+                "options": question.options,
+                "correct_index": question.correct_index,
+                "selected_index": question.selected_index,
+                "is_correct": (
+                    None
+                    if question.selected_index is None
+                    else question.selected_index == question.correct_index
+                ),
+            }
+            questions.append(q_payload)
+            answers_payload.append(
+                {
+                    "quiz_id": quiz.id,
+                    "quiz_title": quiz.title,
+                    "question_index": question.index,
+                    "selected_index": question.selected_index,
+                    "correct_index": question.correct_index,
+                    "is_correct": q_payload["is_correct"],
+                }
+            )
+        quiz_payload.append(
+            {
+                "id": quiz.id,
+                "title": quiz.title,
+                "score": quiz.score,
+                "source_text": quiz.source_text,
+                "created_at": quiz.created_at,
+                "updated_at": quiz.updated_at,
+                "questions": questions,
+            }
+        )
+
+    audit_logs = []
+    if include_audit:
+        audit_logs = [
+            {
+                "id": dr.id,
+                "requested_at": dr.requested_at,
+                "responded_at": dr.responded_at,
+                "status": dr.status,
+                "export_format": dr.export_format,
+                "file_hash": dr.file_hash,
+                "scope": dr.scope,
+            }
+            for dr in DataRequest.objects.filter(user=user).order_by("-requested_at")[:50]
+        ]
+
+    return {
+        "exported_at": timezone.now(),
+        "format_version": "2026-07-j3bis-v1",
+        "scope": SAR_SCOPE,
+        "account": {
+            "id": user.id,
+            "email": user.email,
+            "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "date_joined": user.date_joined,
+            "email_verified": profile.email_verified,
+            "is_active": user.is_active,
+        },
+        "uploaded_courses": [
+            {
+                "quiz_id": quiz["id"],
+                "title": quiz["title"],
+                "source_text": quiz["source_text"],
+                "created_at": quiz["created_at"],
+            }
+            for quiz in quiz_payload
+        ],
+        "generated_quizzes": quiz_payload,
+        "quiz_answers_and_scores": answers_payload,
+        # Le modèle de signalement arrive en J4 ; on expose déjà la catégorie attendue.
+        "reports": [],
+        "audit_logs": audit_logs,
+    }
+
+
+def _json_bytes(payload: dict) -> bytes:
+    return json.dumps(payload, cls=DjangoJSONEncoder, ensure_ascii=False, indent=2).encode("utf-8")
+
+
+def _csv_bytes(payload: dict) -> bytes:
+    """Export CSV machine-readable : une ligne par question/réponse."""
+    buffer = io.StringIO()
+    writer = csv.DictWriter(
+        buffer,
+        fieldnames=[
+            "user_id",
+            "email",
+            "quiz_id",
+            "quiz_title",
+            "quiz_score",
+            "quiz_created_at",
+            "question_index",
+            "question_prompt",
+            "selected_index",
+            "correct_index",
+            "is_correct",
+        ],
+    )
+    writer.writeheader()
+    account = payload["account"]
+    for quiz in payload["generated_quizzes"]:
+        for question in quiz["questions"]:
+            writer.writerow(
+                {
+                    "user_id": account["id"],
+                    "email": account["email"],
+                    "quiz_id": quiz["id"],
+                    "quiz_title": quiz["title"],
+                    "quiz_score": quiz["score"],
+                    "quiz_created_at": quiz["created_at"],
+                    "question_index": question["index"],
+                    "question_prompt": question["prompt"],
+                    "selected_index": question["selected_index"],
+                    "correct_index": question["correct_index"],
+                    "is_correct": question["is_correct"],
+                }
+            )
+    return buffer.getvalue().encode("utf-8-sig")
 
 
 class SignupView(APIView):
@@ -268,8 +430,7 @@ class ProfileView(APIView):
     )
     def delete(self, request):
         # Suppression DURE (hard delete) : confirmée par le mot de passe.
-        # [TODO J3-bis RGPD] Avant de supprimer, proposer un export des données
-        #   personnelles (droit à la portabilité). Voir Lot futur "export RGPD".
+        # J3-bis : l'export RGPD est disponible via /api/accounts/me/export/.
         serializer = DeleteAccountSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
@@ -303,3 +464,58 @@ class ChangePasswordView(APIView):
         Token.objects.filter(user=user).delete()
         token = Token.objects.create(user=user)
         return Response({"detail": "Mot de passe modifié.", "token": token.key})
+
+
+class ExportMyDataView(APIView):
+    """Export RGPD Art. 15/20 de l'utilisateur authentifié.
+
+    GET /api/accounts/me/export/?format=json|csv
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(responses={200: OpenApiResponse(description="Export RGPD JSON ou CSV")})
+    def get(self, request):
+        export_format = (request.query_params.get("format") or "json").lower()
+        if export_format not in {"json", "csv"}:
+            return Response(
+                {"detail": "Format non supporté. Utilisez json ou csv."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        data_request = DataRequest.objects.create(
+            user=request.user,
+            status=DataRequest.Status.PROCESSING,
+            export_format=export_format,
+            scope=SAR_SCOPE,
+            ip_address=_client_ip(request),
+            user_agent=request.META.get("HTTP_USER_AGENT", "")[:1000],
+        )
+
+        try:
+            payload = _build_user_export(request.user)
+            if export_format == "csv":
+                content = _csv_bytes(payload)
+                content_type = "text/csv; charset=utf-8"
+                extension = "csv"
+            else:
+                content = _json_bytes(payload)
+                content_type = "application/json; charset=utf-8"
+                extension = "json"
+
+            file_hash = hashlib.sha256(content).hexdigest()
+            data_request.status = DataRequest.Status.RESPONDED
+            data_request.responded_at = timezone.now()
+            data_request.file_hash = file_hash
+            data_request.save(update_fields=["status", "responded_at", "file_hash"])
+
+            filename = f"edututor-export-{request.user.id}-{timezone.now():%Y%m%d%H%M%S}.{extension}"
+            response = HttpResponse(content, content_type=content_type)
+            response["Content-Disposition"] = f'attachment; filename="{filename}"'
+            response["X-Export-SHA256"] = file_hash
+            return response
+        except Exception:
+            data_request.status = DataRequest.Status.FAILED
+            data_request.responded_at = timezone.now()
+            data_request.save(update_fields=["status", "responded_at"])
+            raise

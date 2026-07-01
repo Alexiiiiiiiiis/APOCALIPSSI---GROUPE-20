@@ -1,24 +1,41 @@
-/** Politique de gestion des cookies (modèle vierge à compléter). */
 import LegalScaffold, { type LegalSection } from './LegalScaffold';
 
 const SECTIONS: LegalSection[] = [
-  { title: "Qu'est-ce qu'un cookie ?", hint: 'définition simple à destination des utilisateurs.' },
   {
     title: 'Cookies et stockage utilisés',
-    hint: "lister ce que le site dépose (ex. token d'authentification en localStorage).",
+    content: (
+      <p className="text-sm text-slate-600">
+        Le MVP utilise le localStorage du navigateur pour conserver le token d&apos;authentification
+        et la préférence de thème. Aucun cookie publicitaire ou traceur marketing n&apos;est utilisé.
+      </p>
+    ),
   },
   {
-    title: 'Finalité de chaque cookie',
-    hint: "à quoi sert chaque cookie/stockage (technique, mesure d'audience…).",
+    title: 'Finalité',
+    content: (
+      <p className="text-sm text-slate-600">
+        Ces stockages sont strictement nécessaires : maintenir la session, appeler l&apos;API de
+        manière authentifiée et conserver l&apos;apparence choisie par l&apos;utilisateur.
+      </p>
+    ),
   },
   {
-    title: 'Consentement',
-    hint: 'cookies nécessitant un consentement préalable et comment il est recueilli.',
+    title: 'Durée de conservation',
+    content: (
+      <p className="text-sm text-slate-600">
+        Le token reste stocké jusqu&apos;à la déconnexion ou suppression manuelle du stockage local.
+        La préférence de thème reste conservée jusqu&apos;à modification ou suppression navigateur.
+      </p>
+    ),
   },
-  { title: 'Durée de conservation', hint: 'combien de temps chaque cookie est conservé.' },
   {
-    title: 'Gérer ou refuser les cookies',
-    hint: 'comment paramétrer ou supprimer les cookies (navigateur, bannière).',
+    title: 'Gestion',
+    content: (
+      <p className="text-sm text-slate-600">
+        L&apos;utilisateur peut effacer ces données depuis les paramètres de son navigateur. La
+        suppression du token provoque une déconnexion du service.
+      </p>
+    ),
   },
 ];
 
@@ -26,15 +43,8 @@ export default function CookiesPage() {
   return (
     <LegalScaffold
       title="Politique de gestion des cookies"
-      intro="Les cookies et technologies de stockage utilisés par le site, et comment les gérer."
+      intro="Stockages techniques utilisés par EduTutor IA."
       sections={SECTIONS}
-    >
-      <div className="mt-6 p-3 bg-slate-50 border border-slate-200 rounded text-sm text-slate-600">
-        💡 Indice pour votre équipe : ce kit stocke actuellement le{' '}
-        <code className="bg-slate-200 px-1 rounded">token</code> d'authentification dans le{' '}
-        <code className="bg-slate-200 px-1 rounded">localStorage</code> du navigateur. C'est un bon
-        point de départ à documenter ici.
-      </div>
-    </LegalScaffold>
+    />
   );
 }

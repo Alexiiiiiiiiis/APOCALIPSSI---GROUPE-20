@@ -171,6 +171,11 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    # Désactive la négociation de contenu DRF via le query param `?format=`.
+    # Sinon `?format=csv` (utilisé par l'export RGPD) est intercepté par DRF qui,
+    # ne trouvant aucun renderer « csv » enregistré, renvoie 404 AVANT la vue.
+    # La vue lit elle-même `request.query_params["format"]` (json|csv).
+    "URL_FORMAT_OVERRIDE": None,
 }
 
 # ----------------------------------------------------------------------------
@@ -227,8 +232,7 @@ LLM_BACKEND = config("LLM_BACKEND", default="ollama")
 
 # --- Ollama (local, gratuit) ---
 OLLAMA_HOST = config("OLLAMA_HOST", default="http://ollama:11434")
-ACTIVE_LLM_MODEL = config("ACTIVE_LLM_MODEL", default="llama3.1:8b")
-OLLAMA_MODEL = ACTIVE_LLM_MODEL
+OLLAMA_MODEL = config("OLLAMA_MODEL", default="llama3.2:3b")
 # Délai max (secondes) d'attente d'une génération Ollama. Sur CPU, un modèle 8B
 # met facilement 2 à 5 minutes pour 10 QCM : 120 s était trop court (timeout ->
 # 502). Défaut généreux, ajustable via .env (OLLAMA_TIMEOUT).

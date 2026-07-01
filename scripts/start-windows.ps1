@@ -50,7 +50,7 @@ Usage : powershell -ExecutionPolicy Bypass -File scripts\start-windows.ps1 [opti
 Set-Location (Join-Path $PSScriptRoot "..")
 
 $OllamaContainer = "apocalipssi-2026-ollama"
-$DefaultModel    = "llama3.1:8b"
+$DefaultModel    = "llama3.2:3b"
 
 # Echec d'une commande native (code de sortie != 0) -> on arrete proprement.
 function Assert-LastExit($message) {
@@ -86,16 +86,12 @@ if (-not (Test-Path ".env")) {
     Write-Host "==> .env present : conserve tel quel." -ForegroundColor Cyan
 }
 
-# Lecture du modele Ollama defini dans .env (fallback : llama3.1:8b).
+# Lecture du modele Ollama defini dans .env (fallback : llama3.2:3b).
 $Model = $DefaultModel
-$envLine = Select-String -Path ".env" -Pattern '^\s*ACTIVE_LLM_MODEL\s*=' -ErrorAction SilentlyContinue |
+$envLine = Select-String -Path ".env" -Pattern '^\s*OLLAMA_MODEL\s*=' -ErrorAction SilentlyContinue |
            Select-Object -First 1
-if (-not $envLine) {
-    $envLine = Select-String -Path ".env" -Pattern '^\s*OLLAMA_MODEL\s*=' -ErrorAction SilentlyContinue |
-               Select-Object -First 1
-}
 if ($envLine) {
-    $val = ($envLine.Line -replace '^\s*(ACTIVE_LLM_MODEL|OLLAMA_MODEL)\s*=\s*', '').Trim()
+    $val = ($envLine.Line -replace '^\s*OLLAMA_MODEL\s*=\s*', '').Trim()
     if ($val) { $Model = $val }
 }
 

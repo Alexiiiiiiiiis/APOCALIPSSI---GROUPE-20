@@ -38,7 +38,7 @@ build:  ## Reconstruit les images Docker (après changement de Dockerfile / requ
 
 pull-model:  ## Télécharge Llama 3.1 8B dans Ollama (~4.7 Go, à faire UNE fois)
 	@echo "⏳ Téléchargement du modèle Llama 3.1 8B… (~5 min selon connexion)"
-	docker exec apocalipssi-2026-ollama ollama pull llama3.1:8b
+	docker exec apocalipssi-2026-ollama ollama pull llama3.2:3b
 	@echo "✅ Modèle téléchargé."
 
 # ---------- Qualité de code ----------

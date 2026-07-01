@@ -9,7 +9,6 @@ quiz_prompt.py et partagés avec les clients OpenAI / Claude.
 """
 
 import requests
-# pyrefly: ignore [missing-import]
 from django.conf import settings
 
 from .base import LLMClient, LLMError
@@ -24,7 +23,7 @@ class OllamaLLMClient(LLMClient):
     ) -> None:
         # Overrides éventuels (config admin en base, Lot 8) sinon valeurs .env.
         self.host = (host or settings.OLLAMA_HOST).rstrip("/")
-        self.model = model or settings.ACTIVE_LLM_MODEL
+        self.model = model or settings.OLLAMA_MODEL
         # Configurable via OLLAMA_TIMEOUT (.env). Défaut 600 s : une génération
         # 8B sur CPU peut dépasser largement 120 s (cf. perturbation J2 latence).
         self.timeout = timeout or settings.OLLAMA_TIMEOUT
