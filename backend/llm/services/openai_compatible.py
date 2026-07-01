@@ -17,7 +17,7 @@ import requests
 from django.conf import settings
 
 from .base import LLMClient, LLMError
-from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, parse_and_validate_quiz
+from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, generate_with_retries
 
 
 class OpenAICompatibleClient(LLMClient):
@@ -49,8 +49,9 @@ class OpenAICompatibleClient(LLMClient):
             )
 
     def generate_quiz(self, source_text: str, title: str) -> list[dict]:
-        raw = self._call(source_text, title)
-        return parse_and_validate_quiz(raw)
+        # Séparation system/user native (messages) + validation stricte avec
+        # re-prompt en cas de sortie invalide (défense J3, couche 4).
+        return generate_with_retries(self._call, source_text, title)
 
     # ----- internals -----
 

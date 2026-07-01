@@ -9,11 +9,12 @@ quiz_prompt.py et partagés avec les clients OpenAI / Claude.
 """
 
 import requests
+
 # pyrefly: ignore [missing-import]
 from django.conf import settings
 
 from .base import LLMClient, LLMError
-from .quiz_prompt import build_full_prompt, parse_and_validate_quiz
+from .quiz_prompt import build_full_prompt, generate_with_retries
 
 
 class OllamaLLMClient(LLMClient):
@@ -31,10 +32,14 @@ class OllamaLLMClient(LLMClient):
 
     def generate_quiz(self, source_text: str, title: str) -> list[dict]:
         # Ollama /api/generate attend UN prompt unique (pas de séparation
-        # system/user) : on concatène donc system + cours via build_full_prompt.
-        prompt = build_full_prompt(source_text, title)
-        raw = self._call_ollama(prompt)
-        return parse_and_validate_quiz(raw)
+        # system/user) : la séparation est donc STRUCTURELLE via des marqueurs de
+        # délimitation autour du cours (défense J3, cf. build_user_prompt).
+        # Validation stricte + re-prompt en cas de sortie invalide (couche 4).
+        return generate_with_retries(
+            lambda src, ttl: self._call_ollama(build_full_prompt(src, ttl)),
+            source_text,
+            title,
+        )
 
     # ----- internals -----
 

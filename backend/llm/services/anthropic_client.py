@@ -16,7 +16,7 @@ import requests
 from django.conf import settings
 
 from .base import LLMClient, LLMError
-from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, parse_and_validate_quiz
+from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, generate_with_retries
 
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 ANTHROPIC_VERSION = "2023-06-01"
@@ -38,8 +38,9 @@ class AnthropicLLMClient(LLMClient):
             )
 
     def generate_quiz(self, source_text: str, title: str) -> list[dict]:
-        raw = self._call_anthropic(source_text, title)
-        return parse_and_validate_quiz(raw)
+        # Champ `system` isolé du user + validation stricte avec re-prompt en cas
+        # de sortie invalide (défense J3, couche 4).
+        return generate_with_retries(self._call_anthropic, source_text, title)
 
     # ----- internals -----
 
