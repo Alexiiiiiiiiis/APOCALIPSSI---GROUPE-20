@@ -4,13 +4,28 @@ Endpoints LLM :
     POST /api/llm/generate-quiz/  — génère un quiz à partir d'un PDF ou d'un texte
 """
 
+# pyrefly: ignore [missing-import]
 import requests
+
+# pyrefly: ignore [missing-import]
 from django.conf import settings
+
+# pyrefly: ignore [missing-import]
 from drf_spectacular.utils import OpenApiResponse, extend_schema
+
+# pyrefly: ignore [missing-import]
 from rest_framework import status
+
+# pyrefly: ignore [missing-import]
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
+
+# pyrefly: ignore [missing-import]
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
+# pyrefly: ignore [missing-import]
 from rest_framework.response import Response
+
+# pyrefly: ignore [missing-import]
 from rest_framework.views import APIView
 
 from quizzes.models import Question, Quiz
@@ -59,7 +74,7 @@ class PingView(APIView):
             )
 
         host = conf["ollama_host"] or settings.OLLAMA_HOST
-        model = conf["model"] or settings.OLLAMA_MODEL
+        model = conf["model"] or settings.ACTIVE_LLM_MODEL
         try:
             resp = requests.get(f"{host}/api/tags", timeout=2)
             resp.raise_for_status()
@@ -144,6 +159,7 @@ class GenerateQuizView(APIView):
             )
 
         # 3. Persistance — Quiz + 10 Questions dans une transaction
+        # pyrefly: ignore [missing-import]
         from django.db import transaction
 
         with transaction.atomic():
