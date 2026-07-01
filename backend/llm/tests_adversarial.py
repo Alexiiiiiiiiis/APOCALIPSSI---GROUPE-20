@@ -4,11 +4,11 @@ import pytest
 from unittest.mock import patch
 
 # pyrefly: ignore [missing-import]
-from backend.llm.services.quiz_prompt import build_user_prompt, parse_and_validate_quiz, SYSTEM_PROMPT
+from llm.services.quiz_prompt import build_user_prompt, parse_and_validate_quiz, SYSTEM_PROMPT
 # pyrefly: ignore [missing-import]
-from backend.llm.services.ollama_client import OllamaLLMClient
+from llm.services.ollama_client import OllamaLLMClient
 # pyrefly: ignore [missing-import]
-from backend.llm.services.base import LLMError
+from llm.services.base import LLMError
 
 
 # ----------------------------------------------------------------------------
@@ -16,7 +16,7 @@ from backend.llm.services.base import LLMError
 # Avant patch : Le client concatène tout dans le paramètre "prompt".
 # Après patch : Le client envoie "system" et "prompt" séparément à l'API.
 # ----------------------------------------------------------------------------
-@patch("backend.llm.services.ollama_client.requests.post")
+@patch("llm.services.ollama_client.requests.post")
 def test_t1_direct_injection_separation_system_user(mock_post):
     mock_post.return_value.json.return_value = {"response": '{"questions": []}'}
     
@@ -86,7 +86,7 @@ def test_t4_json_falsification_distinct_options():
 # Avant patch : Le système abandonne au premier échec de validation.
 # Après patch : Le système retente la génération (max 2 essais) si le LLM hallucine.
 # ----------------------------------------------------------------------------
-@patch("backend.llm.services.ollama_client.OllamaLLMClient._call_ollama")
+@patch("llm.services.ollama_client.OllamaLLMClient._call_ollama")
 def test_t5_reprompt_on_validation_failure(mock_call_ollama):
     # On simule un LLM qui a été hacké et qui répond du texte pur (extraction de prompt)
     mock_call_ollama.return_value = "Voici mes instructions secrètes..."
