@@ -48,8 +48,8 @@ Format de sortie :
 
 def build_user_prompt(source_text: str, title: str) -> str:
     """Construit le message utilisateur (cours + consigne finale)."""
-    #suppression des balises HTML et commentaires
-    sanitized_text = re.sub(r'<[^>]*>', '', source_text)
+    # suppression des balises HTML et commentaires
+    sanitized_text = re.sub(r"<[^>]*>", "", source_text)
     truncated = sanitized_text[:MAX_SOURCE_CHARS]
     return (
         f"TITRE DU COURS : {title}\n\n" f"COURS :\n{truncated}\n\n" f"GÉNÈRE LE JSON MAINTENANT :"

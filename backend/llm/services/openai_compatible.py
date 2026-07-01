@@ -61,7 +61,9 @@ class OpenAICompatibleClient(LLMClient):
                 raw = self._call(source_text, title)
                 return parse_and_validate_quiz(raw)
             except LLMError as e:
-                logger.warning(f"{self.provider_label} validation LLMError (essai {attempt+1}/2) : {e}")
+                logger.warning(
+                    f"{self.provider_label} validation LLMError (essai {attempt+1}/2) : {e}"
+                )
                 if attempt == 1:
                     raise
         raise LLMError("Impossible de générer un quiz valide après 2 tentatives.")
