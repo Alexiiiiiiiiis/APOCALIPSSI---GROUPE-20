@@ -86,6 +86,12 @@ jobs:
       - name: Apply migrations
         run: python manage.py migrate --noinput
 
+      # Perturbation J3 (OWASP LLM-01) : au moins un test adversarial de
+      # prompt injection doit s'exécuter à CHAQUE push / PR (CA-J3-6). On le
+      # lance explicitement pour la traçabilité, avant la suite complète.
+      - name: Adversarial prompt-injection tests (J3)
+        run: pytest llm/tests/adversarial -v
+
       - name: Run pytest with coverage
         run: pytest --cov --cov-report=term-missing
 
