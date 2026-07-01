@@ -14,14 +14,16 @@ leur propre client dédié.
 """
 
 import logging
+
 import requests
+
 # pyrefly: ignore [missing-import]
 from django.conf import settings
 
-logger = logging.getLogger(__name__)
-
 from .base import LLMClient, LLMError
 from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, parse_and_validate_quiz
+
+logger = logging.getLogger(__name__)
 
 
 class OpenAICompatibleClient(LLMClient):

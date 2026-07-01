@@ -6,18 +6,25 @@ Endpoints LLM :
 
 # pyrefly: ignore [missing-import]
 import requests
+
 # pyrefly: ignore [missing-import]
 from django.conf import settings
+
 # pyrefly: ignore [missing-import]
 from drf_spectacular.utils import OpenApiResponse, extend_schema
+
 # pyrefly: ignore [missing-import]
 from rest_framework import status
+
 # pyrefly: ignore [missing-import]
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
+
 # pyrefly: ignore [missing-import]
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
 # pyrefly: ignore [missing-import]
 from rest_framework.response import Response
+
 # pyrefly: ignore [missing-import]
 from rest_framework.views import APIView
 

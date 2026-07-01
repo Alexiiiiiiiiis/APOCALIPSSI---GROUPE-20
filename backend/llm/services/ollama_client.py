@@ -8,11 +8,13 @@ souveraineté des données + zéro coût. Sa contrepartie est la latence sur CPU
 quiz_prompt.py et partagés avec les clients OpenAI / Claude.
 """
 
+import logging
+
 import requests
+
 # pyrefly: ignore [missing-import]
 from django.conf import settings
 
-import logging
 from .base import LLMClient, LLMError
 from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, parse_and_validate_quiz
 
@@ -34,7 +36,7 @@ class OllamaLLMClient(LLMClient):
 
     def generate_quiz(self, source_text: str, title: str) -> list[dict]:
         user_prompt = build_user_prompt(source_text, title)
-        
+
         # Mécanisme de re-prompt (max 2 essais) en cas de faille de validation
         for attempt in range(2):
             try:
@@ -44,7 +46,7 @@ class OllamaLLMClient(LLMClient):
                 logger.warning(f"Ollama validation LLMError (essai {attempt+1}/2) : {e}")
                 if attempt == 1:
                     raise  # Si c'est le 2ème échec, on abandonne
-        
+
         raise LLMError("Impossible de générer un quiz valide après 2 tentatives.")
 
     # ----- internals -----
