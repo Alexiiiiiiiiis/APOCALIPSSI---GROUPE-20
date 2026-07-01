@@ -322,4 +322,4 @@ Requests**, faites-vous **relire**. Voir `docs/05-ci-cd.md` et `docs/07-bonnes-p
 - [ ] Les **pages légales** sont **complétées** par mon équipe
 - [ ] Le code est **testé**, **commité** proprement et **relu** en PR
 
-Bon courage, et amusez-vous ! 🚀
+
